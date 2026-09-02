@@ -27,6 +27,16 @@ jobs:
       - run: npm install --workspace=apps/venue-panel --workspace=packages/shared
       - run: npm run build --workspace=apps/venue-panel
 
+  mobile-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --workspace=apps/mobile --workspace=packages/shared
+      - run: npm run typecheck --workspace=apps/mobile
+
   dsp-service:
     runs-on: ubuntu-latest
     steps:

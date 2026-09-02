@@ -136,7 +136,7 @@ model RewardRedemption {
   discountPercent Int
   qrCode          String     @unique
   redeemedAt      DateTime?
-  posReceiptId    String?
+  posDiscountId   String? // Loyverse (or other POS) discount id staff apply at checkout
   createdAt       DateTime   @default(now())
 
   @@index([userId])

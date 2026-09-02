@@ -6,6 +6,8 @@ import { tablesRouter } from './routes/tables.js';
 import { queueRouter } from './routes/queue.js';
 import { walletRouter } from './routes/wallet.js';
 import { scoresRouter } from './routes/scores.js';
+import { youtubeRouter } from './routes/youtube.js';
+import { venuesRouter } from './routes/venues.js';
 
 export const app = express();
 
@@ -19,6 +21,8 @@ app.use('/tables', tablesRouter);
 app.use('/queue', queueRouter);
 app.use('/wallet', walletRouter);
 app.use('/scores', scoresRouter);
+app.use('/youtube', youtubeRouter);
+app.use('/venues', venuesRouter);
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);

@@ -17,4 +17,6 @@ export const env = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
   corsOrigin: process.env.CORS_ORIGIN ?? '*',
   internalServiceSecret: required('INTERNAL_SERVICE_SECRET', 'dev-internal-secret-change-me'),
+  appEncryptionKey: required('APP_ENCRYPTION_KEY', 'dev-encryption-key-change-me'),
+  youtubeApiKey: process.env.YOUTUBE_API_KEY,
 };
