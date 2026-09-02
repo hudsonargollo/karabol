@@ -61,6 +61,15 @@ services:
       restart_policy:
         condition: on-failure
 
+  landing:
+    image: karaoke-landing:latest
+    networks:
+      - traefik-public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
 networks:
   default:
     driver: overlay
