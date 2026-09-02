@@ -10,9 +10,10 @@ coverage/
 .expo/
 .expo-shared/
 apps/mobile/.expo/
-apps/dsp-service/__pycache__/
+__pycache__/
+*.pyc
 apps/dsp-service/.venv/
-apps/dsp-service/*.pyc
+*.tsbuildinfo
 .turbo/
 *.pem
 .vscode/
