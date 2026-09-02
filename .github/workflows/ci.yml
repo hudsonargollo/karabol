@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  api-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --workspace=apps/api --workspace=packages/shared
+      - run: npm run prisma:generate --workspace=apps/api
+      - run: npm run build --workspace=apps/api
+
+  venue-panel-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --workspace=apps/venue-panel --workspace=packages/shared
+      - run: npm run build --workspace=apps/venue-panel
+
+  dsp-service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r apps/dsp-service/requirements.txt
+      - run: python -m py_compile apps/dsp-service/app/*.py

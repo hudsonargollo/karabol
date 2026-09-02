@@ -1,0 +1,155 @@
+// Primary relational store (PRD 4: PostgreSQL on the VPS).
+// Live/ephemeral state (queue position churn, leaderboards, session presence)
+// lives in Redis, not here — see apps/api/src/config/redis.ts.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATRON
+  VENUE_STAFF
+  VENUE_ADMIN
+  SUPER_ADMIN
+}
+
+enum QueueEntryStatus {
+  PENDING
+  PLAYING
+  COMPLETED
+  SKIPPED
+}
+
+enum RewardTier {
+  BRONZE
+  SILVER
+  GOLD
+}
+
+model User {
+  id           String   @id @default(cuid())
+  phone        String?  @unique
+  email        String?  @unique
+  passwordHash String?
+  displayName  String?
+  role         Role     @default(PATRON)
+  venueId      String? // null for PATRON / SUPER_ADMIN
+  venue        Venue?   @relation(fields: [venueId], references: [id])
+  createdAt    DateTime @default(now())
+
+  queueEntries      QueueEntry[]
+  scores            Score[]
+  rewardRedemptions RewardRedemption[]
+  attendances       Attendance[]
+
+  @@index([venueId])
+}
+
+model Venue {
+  id                 String   @id @default(cuid())
+  name                String
+  slug                String   @unique
+  posProvider         String? // e.g. "loyverse"
+  posApiKeyEncrypted  String?
+  goldThreshold        Int      @default(90)
+  silverThreshold      Int      @default(75)
+  bronzeThreshold      Int      @default(60)
+  goldDiscountPercent  Int      @default(30)
+  silverDiscountPercent Int     @default(20)
+  bronzeDiscountPercent Int     @default(10)
+  createdAt           DateTime @default(now())
+
+  tables Table[]
+  users  User[]
+  songs  QueueEntry[]
+
+  @@index([slug])
+}
+
+model Table {
+  id        String   @id @default(cuid())
+  venueId   String
+  venue     Venue    @relation(fields: [venueId], references: [id])
+  label     String // e.g. "Table 12"
+  pin       String // short PIN alternative to QR
+  qrToken   String   @unique
+  createdAt DateTime @default(now())
+
+  queueEntries QueueEntry[]
+  attendances  Attendance[]
+
+  @@unique([venueId, label])
+  @@index([venueId])
+}
+
+model QueueEntry {
+  id             String            @id @default(cuid())
+  venueId        String
+  venue          Venue             @relation(fields: [venueId], references: [id])
+  tableId        String
+  table          Table             @relation(fields: [tableId], references: [id])
+  requestedById  String
+  requestedBy    User              @relation(fields: [requestedById], references: [id])
+  youtubeVideoId String
+  title          String
+  status         QueueEntryStatus  @default(PENDING)
+  position       Int
+  createdAt      DateTime          @default(now())
+  startedAt      DateTime?
+  completedAt    DateTime?
+
+  score Score?
+
+  @@index([venueId, status])
+  @@index([tableId])
+}
+
+model Score {
+  id            String     @id @default(cuid())
+  queueEntryId  String     @unique
+  queueEntry    QueueEntry @relation(fields: [queueEntryId], references: [id])
+  userId        String
+  user          User       @relation(fields: [userId], references: [id])
+  value         Int // 0-100
+  pitchAccuracy Float?
+  streakBonus   Float?
+  tier          RewardTier?
+  createdAt     DateTime   @default(now())
+
+  rewardRedemption RewardRedemption?
+
+  @@index([userId])
+}
+
+model RewardRedemption {
+  id              String     @id @default(cuid())
+  userId          String
+  user            User       @relation(fields: [userId], references: [id])
+  scoreId         String?    @unique
+  score           Score?     @relation(fields: [scoreId], references: [id])
+  tier            RewardTier
+  discountPercent Int
+  qrCode          String     @unique
+  redeemedAt      DateTime?
+  posReceiptId    String?
+  createdAt       DateTime   @default(now())
+
+  @@index([userId])
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  tableId   String
+  table     Table    @relation(fields: [tableId], references: [id])
+  visitDate DateTime @default(now())
+
+  @@index([userId])
+  @@index([tableId])
+}
