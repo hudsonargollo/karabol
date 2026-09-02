@@ -1,0 +1,72 @@
+# Docker Swarm stack for the shared VPS (62.171.137.90). Deployed as an
+# isolated stack — its own Postgres/Redis, no shared state with the box's
+# other apps (chatwoot/n8n/etc). `api` and `dsp-service` join the existing
+# `traefik-public` overlay network so the box's shared nginx can reach them
+# by service name; nothing here binds a host port.
+#
+# Deploy from infra/ so `docker stack deploy` picks up ./.env for the
+# ${...} interpolation below (POSTGRES_PASSWORD) as well as passing it to
+# containers via `env_file`. Images are built locally on the (single-node)
+# swarm host — see infra/deploy.sh — so `image:` just needs to resolve to
+# what was built there, not a registry.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: karaoke
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: karaoke
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  api:
+    image: karaoke-api:latest
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://karaoke:${POSTGRES_PASSWORD}@postgres:5432/karaoke
+      REDIS_URL: redis://redis:6379
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  dsp-service:
+    image: karaoke-dsp:latest
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      API_BASE_URL: http://api:4000
+    networks:
+      - default
+      - traefik-public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  default:
+    driver: overlay
+  traefik-public:
+    external: true
+
+volumes:
+  postgres_data:
+  redis_data:
