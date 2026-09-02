@@ -15,6 +15,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+export interface RewardRedemption {
+  id: string;
+  tier: 'BRONZE' | 'SILVER' | 'GOLD';
+  discountPercent: number;
+  qrCode: string;
+  redeemedAt: string | null;
+  posDiscountId: string | null;
+  user: { displayName: string | null };
+}
+
 export const api = {
   login: (identifier: string, password: string) =>
     request<{ token: string }>('/auth/login', { method: 'POST', body: JSON.stringify({ identifier, password }) }),
@@ -24,4 +34,7 @@ export const api = {
     request(`/queue/${venueId}/complete/${queueEntryId}`, { method: 'POST' }),
   skipSong: (venueId: string, queueEntryId: string) =>
     request(`/queue/${venueId}/skip/${queueEntryId}`, { method: 'POST' }),
+
+  verifyReward: (qrCode: string) => request<RewardRedemption>(`/wallet/verify/${qrCode}`),
+  redeemReward: (qrCode: string) => request<RewardRedemption>(`/wallet/redeem/${qrCode}`, { method: 'POST' }),
 };

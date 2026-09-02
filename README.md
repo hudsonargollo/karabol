@@ -38,8 +38,20 @@ uvicorn app.main:app --reload
 
 ## Status
 
-Foundational scaffold: auth + RBAC, table association, density-based queue engine (3.3),
-YIN-based DSP scoring pipeline (3.4), tiered POS reward issuance (3.5), and shells for the
-venue panel and mobile app. Not yet wired: YouTube Data API search, real POS provider
-calls (Loyverse), QR code image rendering, and the mobile audio-capture client for the
-DSP WebSocket. See inline `TODO`s.
+Auth + RBAC, table association, density-based queue engine (3.3), YIN-based DSP scoring
+pipeline (3.4) with continuous pitch-similarity scoring, tiered POS reward issuance (3.5)
+wired to a real Loyverse REST client, QR code rendering (patron wallet + a staff
+redeem/verify page in the venue panel), sanitized YouTube search (3.1), and a full patron
+mobile flow — auth, table join, search & queue, live DSP scoring via mic capture streamed
+to the DSP service's WebSocket, and the reward wallet.
+
+Known gaps / TODOs:
+- Patron auth is email+password as a stand-in for Phone+OTP / OAuth (2) — needs an
+  SMS/OAuth provider decision.
+- `LoyverseClient.ensureDiscount`'s discount-creation payload is best-effort: Loyverse's
+  full API reference is gated behind a logged-in developer account, so verify field names
+  against a real venue token before relying on it (see comments in `loyverseClient.ts`).
+- `react-native-live-audio-stream` ships native code — the mobile audio pipeline needs a
+  custom dev client / bare build, not Expo Go, and hasn't been run on a real device yet.
+- QR/table association still uses a PIN form; swap in a QR scanner (`expo-camera`) once
+  testing against printed venue QR codes.
