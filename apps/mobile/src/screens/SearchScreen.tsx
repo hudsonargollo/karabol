@@ -69,6 +69,10 @@ export function SearchScreen({ route, navigation }: Props) {
           onChangeText={setQuery}
           onSubmitEditing={search}
           style={styles.input}
+          // react-native-web already defaults autoComplete to "on"; `id` is
+          // what Chrome actually needs to key autofill suggestions to this
+          // field. No-op on native.
+          id="song-search"
         />
         <Button title={searching ? '…' : 'Search'} onPress={search} disabled={!query.trim() || searching} />
       </View>
