@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Login } from './pages/Login';
 import { QueueDashboard } from './pages/QueueDashboard';
 import { RedeemPage } from './pages/RedeemPage';
@@ -16,21 +16,39 @@ export function App() {
   const isSuperAdmin = claims?.role === 'SUPER_ADMIN';
   const [tab, setTab] = useState<Tab>(isSuperAdmin ? 'admin' : 'queue');
 
+  // Login doesn't remount App, so the tab picked at first render (before a
+  // token exists) can go stale the moment a SUPER_ADMIN actually logs in.
+  useEffect(() => {
+    if (isSuperAdmin) setTab('admin');
+  }, [isSuperAdmin]);
+
   if (!token) return <Login onLoggedIn={setToken} />;
 
+  function logout() {
+    localStorage.removeItem('token');
+    setToken(null);
+  }
+
   return (
-    <div>
-      <nav style={{ display: 'flex', gap: 12, padding: 12, borderBottom: '1px solid #ddd', fontFamily: 'system-ui' }}>
+    <div className="app-shell">
+      <nav className="topbar">
+        <span className="brand">
+          Kara<span className="dot">bol</span>
+        </span>
         {isSuperAdmin && (
-          <button onClick={() => setTab('admin')} disabled={tab === 'admin'}>
+          <button className="tab-btn" onClick={() => setTab('admin')} disabled={tab === 'admin'}>
             Venues
           </button>
         )}
-        <button onClick={() => setTab('queue')} disabled={tab === 'queue'}>
+        <button className="tab-btn" onClick={() => setTab('queue')} disabled={tab === 'queue'}>
           Live Queue
         </button>
-        <button onClick={() => setTab('redeem')} disabled={tab === 'redeem'}>
+        <button className="tab-btn" onClick={() => setTab('redeem')} disabled={tab === 'redeem'}>
           Redeem
+        </button>
+        <span style={{ flex: 1 }} />
+        <button className="tab-btn" onClick={logout}>
+          Log out
         </button>
       </nav>
       {tab === 'admin' && isSuperAdmin ? (

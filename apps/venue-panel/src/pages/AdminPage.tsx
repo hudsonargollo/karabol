@@ -77,54 +77,53 @@ export function AdminPage() {
   }
 
   return (
-    <div style={{ fontFamily: 'system-ui', padding: 24, maxWidth: 720 }}>
+    <div className="page page-wide">
       <h1>Venues</h1>
-      {error && <p style={{ color: 'crimson' }}>{error}</p>}
-      {notice && <p style={{ color: 'seagreen' }}>{notice}</p>}
+      {error && <p className="msg-error">{error}</p>}
+      {notice && <p className="msg-success">{notice}</p>}
 
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 32 }}>
-        <thead>
-          <tr style={{ textAlign: 'left', borderBottom: '1px solid #ddd' }}>
-            <th style={{ padding: 8 }}>Name</th>
-            <th style={{ padding: 8 }}>Slug</th>
-            <th style={{ padding: 8 }}>Tables</th>
-            <th style={{ padding: 8 }}>Users</th>
-            <th style={{ padding: 8 }}>POS</th>
-          </tr>
-        </thead>
-        <tbody>
-          {venues.map((v) => (
-            <tr key={v.id} style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: 8 }}>{v.name}</td>
-              <td style={{ padding: 8 }}>{v.slug}</td>
-              <td style={{ padding: 8 }}>{v._count.tables}</td>
-              <td style={{ padding: 8 }}>{v._count.users}</td>
-              <td style={{ padding: 8 }}>{v.posProvider ?? '—'}</td>
-            </tr>
-          ))}
-          {venues.length === 0 && (
-            <tr>
-              <td style={{ padding: 8 }} colSpan={5}>
-                No venues yet.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <div className="card">
+        {venues.length === 0 ? (
+          <p className="empty-state">No venues yet.</p>
+        ) : (
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Tables</th>
+                <th>Users</th>
+                <th>POS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {venues.map((v) => (
+                <tr key={v.id}>
+                  <td style={{ fontWeight: 700 }}>{v.name}</td>
+                  <td style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-soft)' }}>{v.slug}</td>
+                  <td>{v._count.tables}</td>
+                  <td>{v._count.users}</td>
+                  <td>{v.posProvider ?? <span className="empty-state">—</span>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
-      <section style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0, fontSize: 16 }}>New venue</h2>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <input placeholder="Venue name" value={venueName} onChange={(e) => setVenueName(e.target.value)} style={{ flex: 1 }} />
-          <button onClick={createVenue} disabled={!venueName.trim()}>
+      <div className="card">
+        <h2>New venue</h2>
+        <div className="field-row">
+          <input placeholder="Venue name" value={venueName} onChange={(e) => setVenueName(e.target.value)} style={{ flex: 1, minWidth: 220 }} />
+          <button className="btn" onClick={createVenue} disabled={!venueName.trim()}>
             Create
           </button>
         </div>
-      </section>
+      </div>
 
-      <section style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0, fontSize: 16 }}>New staff login</h2>
-        <div style={{ display: 'grid', gap: 8, gridTemplateColumns: '1fr 1fr' }}>
+      <div className="card">
+        <h2>New staff login</h2>
+        <div className="field-grid" style={{ marginBottom: 10 }}>
           <select value={staffVenueId} onChange={(e) => setStaffVenueId(e.target.value)}>
             <option value="">Select a venue…</option>
             {venues.map((v) => (
@@ -146,18 +145,14 @@ export function AdminPage() {
             onChange={(e) => setStaffPassword(e.target.value)}
           />
         </div>
-        <button
-          style={{ marginTop: 8 }}
-          onClick={createStaff}
-          disabled={!staffVenueId || !staffName.trim() || staffPassword.length < 8}
-        >
+        <button className="btn" onClick={createStaff} disabled={!staffVenueId || !staffName.trim() || staffPassword.length < 8}>
           Create login
         </button>
-      </section>
+      </div>
 
-      <section style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16 }}>
-        <h2 style={{ marginTop: 0, fontSize: 16 }}>New table</h2>
-        <div style={{ display: 'flex', gap: 8 }}>
+      <div className="card">
+        <h2>New table</h2>
+        <div className="field-row">
           <select value={tableVenueId} onChange={(e) => setTableVenueId(e.target.value)}>
             <option value="">Select a venue…</option>
             {venues.map((v) => (
@@ -166,12 +161,17 @@ export function AdminPage() {
               </option>
             ))}
           </select>
-          <input placeholder="Table label (e.g. Mesa 1)" value={tableLabel} onChange={(e) => setTableLabel(e.target.value)} style={{ flex: 1 }} />
-          <button onClick={createTable} disabled={!tableVenueId || !tableLabel.trim()}>
+          <input
+            placeholder="Table label (e.g. Mesa 1)"
+            value={tableLabel}
+            onChange={(e) => setTableLabel(e.target.value)}
+            style={{ flex: 1, minWidth: 180 }}
+          />
+          <button className="btn" onClick={createTable} disabled={!tableVenueId || !tableLabel.trim()}>
             Create
           </button>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

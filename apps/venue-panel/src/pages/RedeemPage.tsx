@@ -34,36 +34,49 @@ export function RedeemPage() {
   }
 
   return (
-    <div style={{ fontFamily: 'system-ui', padding: 24, maxWidth: 420 }}>
+    <div className="page">
       <h1>Redeem a reward</h1>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <input
-          placeholder="Scan or type the code"
-          value={qrCode}
-          onChange={(e) => setQrCode(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && lookup()}
-          style={{ flex: 1 }}
-        />
-        <button onClick={lookup}>Look up</button>
+
+      <div className="card">
+        <div className="field-row">
+          <input
+            placeholder="Scan or type the code"
+            value={qrCode}
+            onChange={(e) => setQrCode(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && lookup()}
+            style={{ flex: 1, minWidth: 220 }}
+          />
+          <button className="btn" onClick={lookup} disabled={!qrCode.trim()}>
+            Look up
+          </button>
+        </div>
       </div>
 
-      {error && <p style={{ color: 'crimson' }}>{error}</p>}
+      {error && <p className="msg-error">{error}</p>}
 
       {redemption && (
-        <div style={{ marginTop: 16, border: '1px solid #ddd', borderRadius: 8, padding: 16 }}>
-          <p>
-            <strong>{redemption.user.displayName ?? 'Patron'}</strong> —{' '}
-            {TIER_LABEL[redemption.tier]} ({redemption.discountPercent}% off)
-          </p>
+        <div className="card">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+            <strong style={{ fontSize: '1.05rem' }}>{redemption.user.displayName ?? 'Patron'}</strong>
+            <span className={`pill ${redemption.tier.toLowerCase()}`}>
+              {TIER_LABEL[redemption.tier]} · {redemption.discountPercent}% off
+            </span>
+          </div>
           {redemption.posDiscountId ? (
-            <p>Apply Loyverse discount id: {redemption.posDiscountId}</p>
+            <p style={{ color: 'var(--ink-soft)', marginBottom: 14 }}>
+              Apply Loyverse discount id: <code style={{ fontFamily: 'var(--font-mono)' }}>{redemption.posDiscountId}</code>
+            </p>
           ) : (
-            <p>No POS discount linked — apply {redemption.discountPercent}% manually.</p>
+            <p style={{ color: 'var(--ink-soft)', marginBottom: 14 }}>
+              No POS discount linked — apply {redemption.discountPercent}% manually.
+            </p>
           )}
           {redemption.redeemedAt ? (
-            <p>Already redeemed at {new Date(redemption.redeemedAt).toLocaleString()}</p>
+            <p className="empty-state">Already redeemed at {new Date(redemption.redeemedAt).toLocaleString()}</p>
           ) : (
-            <button onClick={redeem}>Mark redeemed</button>
+            <button className="btn" onClick={redeem}>
+              Mark redeemed
+            </button>
           )}
         </div>
       )}

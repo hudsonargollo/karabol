@@ -33,33 +33,52 @@ export function QueueDashboard({ venueId, token }: { venueId: string; token: str
   }, [venueId, token]);
 
   return (
-    <div style={{ fontFamily: 'system-ui', padding: 24 }}>
+    <div className="page">
       <h1>Live Queue</h1>
 
-      <section>
+      <div className="card">
         <h2>Now Playing</h2>
         {nowPlaying ? (
           <div>
-            <p>{nowPlaying.title}</p>
-            <p>Score: {liveScore ?? '—'}</p>
-            <button onClick={() => api.completeSong(venueId, nowPlaying.id)}>Complete</button>
-            <button onClick={() => api.skipSong(venueId, nowPlaying.id)}>Skip</button>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>
+              <p style={{ fontSize: '1.1rem', fontWeight: 700 }}>{nowPlaying.title}</p>
+              <span className="score-num">{liveScore ?? '—'}</span>
+            </div>
+            <div className="field-row">
+              <button className="btn" onClick={() => api.completeSong(venueId, nowPlaying.id)}>
+                Complete
+              </button>
+              <button className="btn btn-ghost" onClick={() => api.skipSong(venueId, nowPlaying.id)}>
+                Skip
+              </button>
+            </div>
           </div>
         ) : (
-          <button onClick={() => api.advanceQueue(venueId)}>Play next</button>
+          <button className="btn" onClick={() => api.advanceQueue(venueId)}>
+            Play next
+          </button>
         )}
-      </section>
+      </div>
 
-      <section>
+      <div className="card">
         <h2>Pending ({entries.length})</h2>
-        <ul>
-          {entries.map((entry) => (
-            <li key={entry.id}>
-              [Table {entry.tableId}] {entry.title}
-            </li>
-          ))}
-        </ul>
-      </section>
+        {entries.length === 0 ? (
+          <p className="empty-state">No one in the queue right now.</p>
+        ) : (
+          <table className="data-table">
+            <tbody>
+              {entries.map((entry) => (
+                <tr key={entry.id}>
+                  <td style={{ width: 100, fontFamily: 'var(--font-mono)', color: 'var(--ink-soft)' }}>
+                    Table {entry.tableId}
+                  </td>
+                  <td>{entry.title}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }
