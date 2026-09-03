@@ -70,6 +70,15 @@ services:
       restart_policy:
         condition: on-failure
 
+  venue-panel:
+    image: karaoke-venue-panel:latest
+    networks:
+      - traefik-public
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
 networks:
   default:
     driver: overlay

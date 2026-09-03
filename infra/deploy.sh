@@ -9,6 +9,7 @@ cd "$(dirname "$0")/.."
 docker build -t karaoke-api:latest -f apps/api/Dockerfile .
 docker build -t karaoke-dsp:latest apps/dsp-service
 docker build -t karaoke-landing:latest apps/landing
+docker build -t karaoke-venue-panel:latest -f apps/venue-panel/Dockerfile .
 
 cd infra
 set -a
