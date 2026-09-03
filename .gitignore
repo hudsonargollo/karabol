@@ -4,6 +4,7 @@ build/
 .env
 .env.*
 !.env.example
+!apps/venue-panel/.env.production
 *.log
 .DS_Store
 coverage/
