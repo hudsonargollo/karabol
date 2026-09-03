@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Button, FlatList, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SocketEvent, type QueueEntry } from '@karaokebo/shared';
 import type { RootStackParamList } from '../../App';
 import { api, type YoutubeResult } from '../lib/api';
 import { authStore } from '../lib/authStore';
 import { getSocket } from '../lib/socket';
+import { Button } from '../components/Button';
+import { colors, radius, spacing } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Search'>;
 
@@ -16,6 +18,7 @@ export function SearchScreen({ route, navigation }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<YoutubeResult[]>([]);
   const [status, setStatus] = useState<string | null>(null);
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -37,10 +40,13 @@ export function SearchScreen({ route, navigation }: Props) {
 
   async function search() {
     setStatus(null);
+    setSearching(true);
     try {
       setResults(await api.searchYoutube(query));
     } catch {
       setStatus('Search failed');
+    } finally {
+      setSearching(false);
     }
   }
 
@@ -54,38 +60,75 @@ export function SearchScreen({ route, navigation }: Props) {
   }
 
   return (
-    <View style={{ flex: 1, padding: 16, gap: 12 }}>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+    <View style={styles.screen}>
+      <View style={styles.searchRow}>
         <TextInput
           placeholder="Search a song"
+          placeholderTextColor={colors.inkFaint}
           value={query}
           onChangeText={setQuery}
           onSubmitEditing={search}
-          style={{ flex: 1, borderWidth: 1, padding: 8 }}
+          style={styles.input}
         />
-        <Button title="Search" onPress={search} />
+        <Button title={searching ? '…' : 'Search'} onPress={search} disabled={!query.trim() || searching} />
       </View>
 
-      {status && <Text>{status}</Text>}
+      {status && <Text style={styles.status}>{status}</Text>}
 
       <FlatList
         data={results}
         keyExtractor={(item) => item.youtubeVideoId}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={!searching ? <Text style={styles.empty}>Search for a song to add it to the queue.</Text> : null}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => queueSong(item)}
-            style={{ flexDirection: 'row', gap: 8, paddingVertical: 8, alignItems: 'center' }}
-          >
-            {item.thumbnailUrl && <Image source={{ uri: item.thumbnailUrl }} style={{ width: 60, height: 45 }} />}
-            <View style={{ flex: 1 }}>
-              <Text numberOfLines={2}>{item.title}</Text>
-              <Text style={{ color: '#666', fontSize: 12 }}>{item.channelTitle}</Text>
+          <TouchableOpacity onPress={() => queueSong(item)} style={styles.row} activeOpacity={0.7}>
+            {item.thumbnailUrl ? (
+              <Image source={{ uri: item.thumbnailUrl }} style={styles.thumb} />
+            ) : (
+              <View style={[styles.thumb, styles.thumbFallback]} />
+            )}
+            <View style={styles.rowText}>
+              <Text style={styles.rowTitle} numberOfLines={2}>
+                {item.title}
+              </Text>
+              <Text style={styles.rowChannel}>{item.channelTitle}</Text>
             </View>
           </TouchableOpacity>
         )}
       />
 
-      <Button title="My rewards" onPress={() => navigation.navigate('Wallet')} />
+      <Button variant="ghost" title="My rewards" onPress={() => navigation.navigate('Wallet')} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.bg, padding: spacing.lg, gap: spacing.md },
+  searchRow: { flexDirection: 'row', gap: spacing.sm, alignItems: 'stretch' },
+  input: {
+    flex: 1,
+    backgroundColor: colors.surface2,
+    borderWidth: 1,
+    borderColor: colors.lineStrong,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.md,
+    color: colors.ink,
+    fontSize: 15,
+  },
+  status: { color: colors.gold, fontSize: 13 },
+  empty: { color: colors.inkFaint, fontSize: 14, paddingVertical: spacing.lg, textAlign: 'center' },
+  list: { gap: spacing.sm, flexGrow: 1 },
+  row: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    padding: spacing.sm,
+  },
+  thumb: { width: 72, height: 54, borderRadius: radius.sm },
+  thumbFallback: { backgroundColor: colors.surface3 },
+  rowText: { flex: 1, gap: 2 },
+  rowTitle: { color: colors.ink, fontSize: 14, fontWeight: '600' },
+  rowChannel: { color: colors.inkFaint, fontSize: 12 },
+});
