@@ -2,7 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { prisma } from '../config/db.js';
-import { signToken } from '../middleware/auth.js';
+import { requireAuth, signToken } from '../middleware/auth.js';
 
 export const authRouter = Router();
 
@@ -48,4 +48,25 @@ authRouter.post('/login', async (req, res) => {
 
   const token = signToken({ userId: user.id, role: user.role, venueId: user.venueId });
   return res.json({ token, user: { id: user.id, role: user.role, displayName: user.displayName } });
+});
+
+const changePasswordSchema = z.object({
+  currentPassword: z.string(),
+  newPassword: z.string().min(8),
+});
+
+// Self-service password rotation — used right after an admin/staff account is bootstrapped.
+authRouter.patch('/password', requireAuth, async (req, res) => {
+  const parsed = changePasswordSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+  const { currentPassword, newPassword } = parsed.data;
+
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: req.auth!.userId } });
+  if (!user.passwordHash || !(await bcrypt.compare(currentPassword, user.passwordHash))) {
+    return res.status(401).json({ error: 'Current password is incorrect' });
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+  await prisma.user.update({ where: { id: user.id }, data: { passwordHash } });
+  return res.status(204).send();
 });

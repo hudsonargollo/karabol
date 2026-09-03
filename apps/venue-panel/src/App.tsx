@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Login } from './pages/Login';
 import { QueueDashboard } from './pages/QueueDashboard';
 import { RedeemPage } from './pages/RedeemPage';
+import { AdminPage } from './pages/AdminPage';
+import { decodeToken } from './lib/auth';
 
 // TODO: pull venueId from the authenticated staff user once venue selection lands.
 const DEV_VENUE_ID = import.meta.env.VITE_DEV_VENUE_ID ?? '';
 
+type Tab = 'queue' | 'redeem' | 'admin';
+
 export function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-  const [tab, setTab] = useState<'queue' | 'redeem'>('queue');
+  const claims = useMemo(() => (token ? decodeToken(token) : null), [token]);
+  const isSuperAdmin = claims?.role === 'SUPER_ADMIN';
+  const [tab, setTab] = useState<Tab>(isSuperAdmin ? 'admin' : 'queue');
 
   if (!token) return <Login onLoggedIn={setToken} />;
 
   return (
     <div>
       <nav style={{ display: 'flex', gap: 12, padding: 12, borderBottom: '1px solid #ddd', fontFamily: 'system-ui' }}>
+        {isSuperAdmin && (
+          <button onClick={() => setTab('admin')} disabled={tab === 'admin'}>
+            Venues
+          </button>
+        )}
         <button onClick={() => setTab('queue')} disabled={tab === 'queue'}>
           Live Queue
         </button>
@@ -22,7 +33,13 @@ export function App() {
           Redeem
         </button>
       </nav>
-      {tab === 'queue' ? <QueueDashboard venueId={DEV_VENUE_ID} token={token} /> : <RedeemPage />}
+      {tab === 'admin' && isSuperAdmin ? (
+        <AdminPage />
+      ) : tab === 'queue' ? (
+        <QueueDashboard venueId={DEV_VENUE_ID} token={token} />
+      ) : (
+        <RedeemPage />
+      )}
     </div>
   );
 }
