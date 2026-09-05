@@ -4,9 +4,11 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { DspSocket } from '../lib/dspSocket';
 import { decodePcm16Base64 } from '../lib/pcm';
+import { api } from '../lib/api';
 import { Button } from '../components/Button';
 import { Screen } from '../components/Screen';
-import { colors, spacing } from '../theme';
+import { MascotBlock } from '../components/MascotBlock';
+import { colors, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Performance'>;
 
@@ -27,6 +29,7 @@ export function PerformanceScreen({ route, navigation }: Props) {
   const { queueEntryId, venueId } = route.params;
   const [liveScore, setLiveScore] = useState<number | null>(null);
   const [finalScore, setFinalScore] = useState<number | null>(null);
+  const [finishing, setFinishing] = useState(false);
   const dspSocketRef = useRef<DspSocket | null>(null);
 
   useEffect(() => {
@@ -63,23 +66,45 @@ export function PerformanceScreen({ route, navigation }: Props) {
     };
   }, [queueEntryId, venueId]);
 
-  function finishSinging() {
+  // Mobile-driven queue: this replaces the old flow where a venue staffer
+  // had to click "Complete" + "Play next" in the panel — the server marks
+  // this entry done and advances the next table automatically.
+  async function finishSinging() {
+    setFinishing(true);
     dspSocketRef.current?.end();
-    navigation.goBack();
+    try {
+      await api.finishSong(venueId, queueEntryId);
+    } catch (err) {
+      console.warn('[queue] finishSong failed', err);
+    } finally {
+      navigation.goBack();
+    }
   }
 
   return (
     <Screen center>
-      <Text style={styles.cue}>You're up! Sing along.</Text>
+      <Text style={styles.cue}>¡TE TOCA!</Text>
+      <MascotBlock label="TÚ" accent={colors.magenta} size={140} style={{ marginVertical: spacing.lg }} />
       <Text style={styles.score}>{finalScore ?? liveScore ?? '—'}</Text>
-      {finalScore !== null && <Text style={styles.finalLabel}>Final score</Text>}
-      <Button title="I'm done singing" onPress={finishSinging} />
+      {finalScore !== null ? (
+        <Text style={styles.finalLabel}>Puntaje final</Text>
+      ) : (
+        <Text style={styles.finalLabel}>Cantando en vivo…</Text>
+      )}
+      <Button title="Terminé de cantar" onPress={finishSinging} loading={finishing} disabled={finishing} />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  cue: { color: colors.inkSoft, fontSize: 16 },
-  score: { color: colors.gold, fontSize: 72, fontWeight: '800' },
+  cue: {
+    color: colors.magenta,
+    fontSize: 34,
+    textShadowColor: 'rgba(255,46,166,0.6)',
+    textShadowRadius: 30,
+    textShadowOffset: { width: 0, height: 0 },
+    ...type.displayItalic,
+  },
+  score: { color: colors.lime, fontSize: 72, fontWeight: '800' },
   finalLabel: { color: colors.inkFaint, fontSize: 14, marginTop: -spacing.md },
 });

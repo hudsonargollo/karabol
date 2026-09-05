@@ -65,18 +65,20 @@ export function QueueDashboard({ venueId, token }: { venueId: string; token: str
         {entries.length === 0 ? (
           <p className="empty-state">No one in the queue right now.</p>
         ) : (
-          <table className="data-table">
-            <tbody>
-              {entries.map((entry) => (
-                <tr key={entry.id}>
-                  <td style={{ width: 100, fontFamily: 'var(--font-mono)', color: 'var(--ink-soft)' }}>
-                    Table {entry.tableId}
-                  </td>
-                  <td>{entry.title}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="table-scroll">
+            <table className="data-table">
+              <tbody>
+                {entries.map((entry) => (
+                  <tr key={entry.id}>
+                    <td style={{ width: 100, fontFamily: 'var(--font-mono)', color: 'var(--ink-soft)' }}>
+                      Table {entry.tableId}
+                    </td>
+                    <td>{entry.title}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

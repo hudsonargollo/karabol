@@ -10,7 +10,7 @@ const TIER_LABEL: Record<WalletItem['tier'], string> = {
 };
 
 const TIER_COLOR: Record<WalletItem['tier'], string> = {
-  GOLD: colors.gold,
+  GOLD: colors.lime,
   SILVER: colors.silver,
   BRONZE: colors.bronze,
 };

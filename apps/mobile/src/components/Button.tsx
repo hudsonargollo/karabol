@@ -24,7 +24,7 @@ export function Button({ title, onPress, variant = 'primary', disabled, loading 
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={isGhost ? colors.ink : colors.goldInk} />
+        <ActivityIndicator color={isGhost ? colors.ink : colors.limeInk} />
       ) : (
         <Text style={[styles.text, isGhost ? styles.textGhost : styles.textPrimary, isDisabled && styles.textDisabled]}>
           {title}
@@ -42,12 +42,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  primary: { backgroundColor: colors.gold },
+  primary: { backgroundColor: colors.lime },
   ghost: { backgroundColor: 'transparent', borderWidth: 1, borderColor: colors.lineStrong },
-  disabled: { backgroundColor: colors.surface3, borderColor: colors.surface3 },
+  disabled: { backgroundColor: colors.surface3, borderColor: colors.lineStrong },
   pressed: { opacity: 0.85 },
-  text: { fontSize: 15, fontWeight: '700' },
-  textPrimary: { color: colors.goldInk },
+  text: { fontSize: 15, fontWeight: '800', fontFamily: 'System' },
+  textPrimary: { color: colors.limeInk },
   textGhost: { color: colors.ink },
   textDisabled: { color: colors.inkFaint },
 });

@@ -33,8 +33,24 @@ queueRouter.post('/', requireAuth, async (req, res) => {
     },
   });
 
-  await new QueueEngine(venueId).enqueue(tableId, entry.id);
+  const engine = new QueueEngine(venueId);
+  await engine.enqueue(tableId, entry.id);
   getIo().to(venueRoom(venueId)).emit(SocketEvent.QUEUE_STATE, { added: entry });
+
+  // Mobile-driven: nobody needs to be at the venue-panel for the first song
+  // of the night — if no table is currently playing, kick off the density
+  // rotation right away instead of waiting for staff to hit "Play next".
+  const alreadyPlaying = await prisma.queueEntry.findFirst({ where: { venueId, status: 'PLAYING' } });
+  if (!alreadyPlaying) {
+    const next = await engine.dequeueNext();
+    if (next) {
+      const nextEntry = await prisma.queueEntry.update({
+        where: { id: next.queueEntryId },
+        data: { status: 'PLAYING', startedAt: new Date() },
+      });
+      getIo().to(venueRoom(venueId)).emit(SocketEvent.NOW_PLAYING, nextEntry);
+    }
+  }
 
   return res.status(201).json(entry);
 });
@@ -85,6 +101,40 @@ queueRouter.post(
     return res.json(entry);
   },
 );
+
+// 3.1/3.2 Mobile-driven queue advance — the performer's own device marks
+// their entry complete and immediately advances the queue, instead of
+// requiring venue staff to click "Complete" + "Play next" for every
+// performance. Staff keep the routes above for manual overrides (a no-show,
+// a skip, etc.) but the common case no longer needs them at all.
+queueRouter.post('/:venueId/finish/:queueEntryId', requireAuth, async (req, res) => {
+  const { venueId, queueEntryId } = req.params;
+  const entry = await prisma.queueEntry.findUnique({ where: { id: queueEntryId } });
+
+  if (!entry || entry.venueId !== venueId) return res.status(404).json({ error: 'Queue entry not found' });
+  if (entry.requestedById !== req.auth!.userId) return res.status(403).json({ error: 'Not your performance' });
+  if (entry.status !== 'PLAYING') return res.status(400).json({ error: 'This entry is not currently playing' });
+
+  const completed = await prisma.queueEntry.update({
+    where: { id: queueEntryId },
+    data: { status: 'COMPLETED', completedAt: new Date() },
+  });
+
+  const engine = new QueueEngine(venueId);
+  await engine.onSongCompleted(completed.tableId);
+  getIo().to(venueRoom(venueId)).emit(SocketEvent.QUEUE_STATE, { completed });
+
+  const next = await engine.dequeueNext();
+  if (!next) return res.json({ completed, next: null });
+
+  const nextEntry = await prisma.queueEntry.update({
+    where: { id: next.queueEntryId },
+    data: { status: 'PLAYING', startedAt: new Date() },
+  });
+  getIo().to(venueRoom(venueId)).emit(SocketEvent.NOW_PLAYING, nextEntry);
+
+  return res.json({ completed, next: nextEntry });
+});
 
 queueRouter.post(
   '/:venueId/skip/:queueEntryId',

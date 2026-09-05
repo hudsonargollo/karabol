@@ -86,28 +86,30 @@ export function AdminPage() {
         {venues.length === 0 ? (
           <p className="empty-state">No venues yet.</p>
         ) : (
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Slug</th>
-                <th>Tables</th>
-                <th>Users</th>
-                <th>POS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {venues.map((v) => (
-                <tr key={v.id}>
-                  <td style={{ fontWeight: 700 }}>{v.name}</td>
-                  <td style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-soft)' }}>{v.slug}</td>
-                  <td>{v._count.tables}</td>
-                  <td>{v._count.users}</td>
-                  <td>{v.posProvider ?? <span className="empty-state">—</span>}</td>
+          <div className="table-scroll">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Slug</th>
+                  <th>Tables</th>
+                  <th>Users</th>
+                  <th>POS</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {venues.map((v) => (
+                  <tr key={v.id}>
+                    <td style={{ fontWeight: 700 }}>{v.name}</td>
+                    <td style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-soft)' }}>{v.slug}</td>
+                    <td>{v._count.tables}</td>
+                    <td>{v._count.users}</td>
+                    <td>{v.posProvider ?? <span className="empty-state">—</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 

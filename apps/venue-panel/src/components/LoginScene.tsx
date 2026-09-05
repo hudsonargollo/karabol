@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const PALETTE = ['#f4b93c', '#ef2f7b', '#23c9c0'];
+const PALETTE = ['#c7f300', '#ff2ea6', '#2ee6ff'];
 
 function makeSprite(): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');

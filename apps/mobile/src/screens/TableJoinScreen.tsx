@@ -24,7 +24,7 @@ export function TableJoinScreen({ navigation }: Props) {
     setSubmitting(true);
     try {
       const { venueId, tableId } = await api.joinTable(venueSlug, pin);
-      navigation.replace('Search', { venueId, tableId });
+      navigation.replace('Home', { venueId, tableId });
     } catch {
       setError('Table not found — check the venue name and PIN');
     } finally {

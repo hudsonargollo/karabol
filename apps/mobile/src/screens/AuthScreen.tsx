@@ -7,7 +7,7 @@ import { authStore } from '../lib/authStore';
 import { Button } from '../components/Button';
 import { TextField } from '../components/TextField';
 import { Screen } from '../components/Screen';
-import { colors, spacing } from '../theme';
+import { colors, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Auth'>;
 
@@ -26,11 +26,12 @@ export function AuthScreen({ navigation }: Props) {
     setError(null);
     setSubmitting(true);
     try {
-      const { token } =
+      const { token, user } =
         mode === 'login'
           ? await api.login(identifier, password)
           : await api.register({ email: identifier, password, displayName });
       await authStore.setToken(token);
+      await authStore.setUser(user);
       navigation.replace('TableJoin');
     } catch {
       setError(mode === 'login' ? 'Invalid credentials' : 'Could not register — try a different email');
@@ -76,8 +77,8 @@ export function AuthScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   brand: { flexDirection: 'row', marginBottom: spacing.sm },
-  brandKara: { color: colors.ink, fontSize: 22, fontWeight: '800' },
-  brandBol: { color: colors.gold, fontSize: 22, fontWeight: '800' },
+  brandKara: { color: colors.ink, fontSize: 24, ...type.displayItalic },
+  brandBol: { color: colors.lime, fontSize: 24, ...type.displayItalic },
   title: { color: colors.ink, fontSize: 20, fontWeight: '700', marginBottom: spacing.sm },
   error: { color: colors.danger, fontSize: 13 },
 });

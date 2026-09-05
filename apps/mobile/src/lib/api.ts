@@ -33,11 +33,28 @@ export interface WalletItem {
   createdAt: string;
 }
 
+export interface AuthUser {
+  id: string;
+  role: string;
+  displayName: string;
+}
+
+export interface QueueEntry {
+  id: string;
+  venueId: string;
+  tableId: string;
+  youtubeVideoId: string;
+  title: string;
+  status: 'PENDING' | 'PLAYING' | 'COMPLETED' | 'SKIPPED';
+  position: number;
+  createdAt: string;
+}
+
 export const api = {
   register: (payload: { email?: string; phone?: string; password: string; displayName: string }) =>
-    request<{ token: string }>('/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
+    request<{ token: string; user: AuthUser }>('/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
   login: (identifier: string, password: string) =>
-    request<{ token: string }>('/auth/login', { method: 'POST', body: JSON.stringify({ identifier, password }) }),
+    request<{ token: string; user: AuthUser }>('/auth/login', { method: 'POST', body: JSON.stringify({ identifier, password }) }),
 
   joinTable: (venueSlug: string, pin: string) =>
     request<{ tableId: string; venueId: string; label: string }>('/tables/join', {
@@ -49,6 +66,16 @@ export const api = {
 
   queueSong: (payload: { venueId: string; tableId: string; youtubeVideoId: string; title: string }) =>
     request('/queue', { method: 'POST', body: JSON.stringify(payload) }),
+
+  getQueue: (venueId: string) => request<QueueEntry[]>(`/queue/${venueId}`),
+
+  // Mobile-driven: the performer's own device marks their entry complete
+  // and the server auto-advances to the next table — no venue-panel click
+  // needed for the common case.
+  finishSong: (venueId: string, queueEntryId: string) =>
+    request<{ completed: QueueEntry; next: QueueEntry | null }>(`/queue/${venueId}/finish/${queueEntryId}`, {
+      method: 'POST',
+    }),
 
   getWallet: () => request<WalletItem[]>('/wallet'),
 };
