@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { authStore } from '../lib/authStore';
-import { colors, spacing, type } from '../theme';
+import { karabol } from '../assets/karabol';
+import { colors, spacing } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Splash'>;
 
@@ -30,18 +31,11 @@ export function SplashScreen({ navigation }: Props) {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.crewBand} />
+      <Image source={karabol.crew} style={styles.crewBand} resizeMode="cover" />
       <View style={styles.fade} />
 
       <View style={styles.content}>
-        <Animated.Text
-          style={[
-            styles.wordmark,
-            { textShadowRadius: shadowRadius as unknown as number, textShadowColor: colors.lime, textShadowOffset: { width: 0, height: 0 } },
-          ]}
-        >
-          KARABOL
-        </Animated.Text>
+        <Image source={karabol.logo} style={styles.wordmark} resizeMode="contain" />
         <Text style={styles.tagline}>Karaoke con sabor boliviano. Queue up. Battle. Reign.</Text>
 
         <Pressable onPress={() => navigation.replace(target)}>
@@ -64,14 +58,10 @@ export function SplashScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  crewBand: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '55%', backgroundColor: colors.surface2 },
-  fade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '30%', backgroundColor: colors.bg, opacity: 0.55 },
+  crewBand: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '55%', width: '100%' },
+  fade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '48%', backgroundColor: colors.bg, opacity: 0.82 },
   content: { marginTop: 'auto', padding: spacing.xl, gap: spacing.md },
-  wordmark: {
-    color: colors.lime,
-    fontSize: 44,
-    ...type.displayItalic,
-  },
+  wordmark: { width: 220, height: 66, marginLeft: -8 },
   tagline: { color: colors.ink, fontSize: 15 },
   primaryBtn: { backgroundColor: colors.lime, padding: spacing.lg },
   primaryBtnText: { color: colors.limeInk, fontSize: 15, fontWeight: '700', textAlign: 'center' },

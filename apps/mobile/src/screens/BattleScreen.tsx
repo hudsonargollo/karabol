@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { BottomNav } from '../components/BottomNav';
 import { MascotBlock } from '../components/MascotBlock';
 import { TypedBubble } from '../components/TypedBubble';
-import { colors, spacing, type } from '../theme';
+import { karabol } from '../assets/karabol';
+import { colors, spacing } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Battle'>;
 
@@ -31,16 +32,10 @@ export function BattleScreen({ route, navigation }: Props) {
         <Text style={styles.roundTagText}>{ROUND.label}</Text>
       </View>
 
-      <View style={styles.duel}>
-        <View style={styles.side}>
-          <MascotBlock label={ROUND.left} accent={colors.magenta} size={120} />
-          <Text style={[styles.sideName, { color: colors.magenta }]}>{ROUND.left}</Text>
-        </View>
-        <Text style={styles.vs}>VS</Text>
-        <View style={styles.side}>
-          <MascotBlock label={ROUND.right} accent={colors.lime} size={120} />
-          <Text style={[styles.sideName, { color: colors.lime }]}>{ROUND.right}</Text>
-        </View>
+      <Image source={karabol.standoff} style={styles.duel} resizeMode="cover" />
+      <View style={styles.duelNames}>
+        <Text style={[styles.sideName, { color: colors.magenta }]}>{ROUND.left}</Text>
+        <Text style={[styles.sideName, { color: colors.lime }]}>{ROUND.right}</Text>
       </View>
 
       <View style={styles.voteSection}>
@@ -68,7 +63,7 @@ export function BattleScreen({ route, navigation }: Props) {
       </View>
 
       <View style={styles.mcRow}>
-        <MascotBlock label="MC" accent={colors.cyan} size={56} />
+        <MascotBlock label="JUCUMARI" accent={colors.cyan} size={56} source={karabol.bearHero} />
         <TypedBubble
           accent={colors.cyan}
           text="Dos voces, un trono. ¡Vota ya!"
@@ -98,10 +93,14 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 14,
   },
-  duel: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.lg, marginTop: spacing.lg },
-  side: { alignItems: 'center', gap: spacing.xs },
+  duel: { width: '100%', height: 190, marginTop: spacing.md },
+  duelNames: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.xl,
+    marginTop: spacing.sm,
+  },
   sideName: { fontSize: 14, fontWeight: '700' },
-  vs: { color: colors.cyan, fontSize: 20, ...type.displayItalic },
   voteSection: { paddingHorizontal: spacing.xl, marginTop: spacing.xl },
   voteHeader: { flexDirection: 'row', justifyContent: 'space-between' },
   voteLabel: { color: colors.inkFaint, fontSize: 12 },

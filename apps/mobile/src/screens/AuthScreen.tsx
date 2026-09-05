@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { api } from '../lib/api';
@@ -7,7 +7,8 @@ import { authStore } from '../lib/authStore';
 import { Button } from '../components/Button';
 import { TextField } from '../components/TextField';
 import { Screen } from '../components/Screen';
-import { colors, spacing, type } from '../theme';
+import { karabol } from '../assets/karabol';
+import { colors, spacing } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Auth'>;
 
@@ -42,10 +43,7 @@ export function AuthScreen({ navigation }: Props) {
 
   return (
     <Screen>
-      <View style={styles.brand}>
-        <Text style={styles.brandKara}>Kara</Text>
-        <Text style={styles.brandBol}>bol</Text>
-      </View>
+      <Image source={karabol.logo} style={styles.brand} resizeMode="contain" />
       <Text style={styles.title}>{mode === 'login' ? 'Log in' : 'Create account'}</Text>
 
       {mode === 'register' && <TextField label="Your name" value={displayName} onChangeText={setDisplayName} />}
@@ -76,9 +74,7 @@ export function AuthScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  brand: { flexDirection: 'row', marginBottom: spacing.sm },
-  brandKara: { color: colors.ink, fontSize: 24, ...type.displayItalic },
-  brandBol: { color: colors.lime, fontSize: 24, ...type.displayItalic },
+  brand: { width: 160, height: 48, marginBottom: spacing.sm, marginLeft: -6 },
   title: { color: colors.ink, fontSize: 20, fontWeight: '700', marginBottom: spacing.sm },
   error: { color: colors.danger, fontSize: 13 },
 });

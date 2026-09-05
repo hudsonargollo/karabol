@@ -3,18 +3,19 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { MascotBlock } from '../components/MascotBlock';
 import { TypedBubble } from '../components/TypedBubble';
+import { karabol } from '../assets/karabol';
 import { colors, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Leaderboard'>;
 
 // 07 Leaderboard — sample-only until there's a real ranking endpoint.
-const QUEEN = { name: 'Marisol', meta: '4 victorias · promedio 9.1', pts: 960 };
+const QUEEN = { name: 'Marisol', meta: '4 victorias · promedio 9.1', pts: 960, img: karabol.cambitaHero };
 const RANKING = [
-  { pos: 2, name: 'Diego', meta: '2 victorias · 8.8', pts: 840, accent: colors.ink },
-  { pos: 3, name: 'Tú', meta: '1 victoria · 8.7', pts: 790, accent: colors.magenta },
-  { pos: 4, name: 'Ana', meta: '1 victoria · 8.2', pts: 655, accent: colors.ink },
-  { pos: 5, name: 'Beto', meta: '0 victorias · 7.9', pts: 580, accent: colors.ink },
-  { pos: 6, name: 'Carlos', meta: '0 victorias · 7.4', pts: 515, accent: colors.ink },
+  { pos: 2, name: 'Diego', meta: '2 victorias · 8.8', pts: 840, accent: colors.ink, img: karabol.alpachoHero },
+  { pos: 3, name: 'Tú', meta: '1 victoria · 8.7', pts: 790, accent: colors.magenta, img: karabol.capybaraHero },
+  { pos: 4, name: 'Ana', meta: '1 victoria · 8.2', pts: 655, accent: colors.ink, img: karabol.bearHero },
+  { pos: 5, name: 'Beto', meta: '0 victorias · 7.9', pts: 580, accent: colors.ink, img: karabol.diabladaHero },
+  { pos: 6, name: 'Carlos', meta: '0 victorias · 7.4', pts: 515, accent: colors.ink, img: karabol.parabaHero },
 ];
 
 export function LeaderboardScreen({ route }: Props) {
@@ -28,7 +29,7 @@ export function LeaderboardScreen({ route }: Props) {
 
       <View style={styles.queenCard}>
         <Text style={styles.queenPos}>1</Text>
-        <MascotBlock label={QUEEN.name} accent={colors.lime} size={52} />
+        <MascotBlock label={QUEEN.name} accent={colors.lime} size={52} source={QUEEN.img} />
         <View style={{ flex: 1 }}>
           <Text style={styles.queenName}>
             {QUEEN.name} <Text style={{ fontSize: 11, color: colors.lime }}>👑 REINA</Text>
@@ -45,6 +46,7 @@ export function LeaderboardScreen({ route }: Props) {
         renderItem={({ item }) => (
           <View style={styles.row}>
             <Text style={styles.rowPos}>{item.pos}</Text>
+            <MascotBlock label={item.name} accent={item.accent} size={36} source={item.img} />
             <View style={{ flex: 1 }}>
               <Text style={[styles.rowName, { color: item.accent }]}>{item.name}</Text>
               <Text style={styles.rowMeta}>{item.meta}</Text>
@@ -55,7 +57,7 @@ export function LeaderboardScreen({ route }: Props) {
       />
 
       <View style={styles.mcRow}>
-        <MascotBlock label="LA PARABA" accent={colors.cyan} size={44} />
+        <MascotBlock label="LA PARABA" accent={colors.cyan} size={44} source={karabol.parabaHero} />
         <TypedBubble accent={colors.cyan} text="¡Marisol sigue invicta, bro! ¿Quién se anima?" style={{ flex: 1, maxWidth: undefined }} />
       </View>
     </View>

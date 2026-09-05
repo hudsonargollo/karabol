@@ -5,15 +5,16 @@ import type { RootStackParamList } from '../../App';
 import { authStore } from '../lib/authStore';
 import { BottomNav } from '../components/BottomNav';
 import { MascotBlock } from '../components/MascotBlock';
+import { karabol } from '../assets/karabol';
 import { colors, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 const CREW = [
-  { label: 'Diablada', accent: colors.magenta },
-  { label: 'Alpacho', accent: colors.lime },
-  { label: 'Jucumari', accent: colors.cyan },
-  { label: 'Paraba', accent: colors.purple },
+  { label: 'Diablada', accent: colors.magenta, img: karabol.diabladaHero },
+  { label: 'Alpacho', accent: colors.lime, img: karabol.alpachoHero },
+  { label: 'Jucumari', accent: colors.cyan, img: karabol.bearHero },
+  { label: 'Paraba', accent: colors.purple, img: karabol.parabaHero },
 ];
 
 // 08 Perfil — real display name from auth; there's no stats/achievements
@@ -55,7 +56,7 @@ export function ProfileScreen({ route, navigation }: Props) {
             <Text style={styles.bio}>{bio}</Text>
           )}
         </View>
-        <MascotBlock label={name.slice(0, 2) || '?'} accent={colors.purple} size={56} />
+        <MascotBlock label={name.slice(0, 2) || '?'} accent={colors.purple} size={56} source={karabol.karaboyFace} />
       </View>
 
       <View style={styles.statsGrid}>
@@ -70,7 +71,7 @@ export function ProfileScreen({ route, navigation }: Props) {
       <Text style={styles.sectionLabel}>CREW</Text>
       <View style={styles.crewRow}>
         {CREW.map((m) => (
-          <MascotBlock key={m.label} label={m.label} accent={m.accent} size={72} />
+          <MascotBlock key={m.label} label={m.label} accent={m.accent} size={72} source={m.img} />
         ))}
       </View>
 

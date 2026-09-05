@@ -5,6 +5,7 @@ import type { RootStackParamList } from '../../App';
 import { api, type YoutubeResult } from '../lib/api';
 import { BottomNav } from '../components/BottomNav';
 import { MascotBlock } from '../components/MascotBlock';
+import { karabol } from '../assets/karabol';
 import { colors, radius, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
@@ -64,7 +65,7 @@ export function HomeScreen({ route, navigation }: Props) {
           <Text style={styles.eyebrow}>KARAOKE NIGHT</Text>
           <Text style={styles.greeting}>Hola</Text>
         </View>
-        <MascotBlock label="TÚ" accent={colors.lime} size={44} />
+        <MascotBlock label="TÚ" accent={colors.lime} size={44} source={karabol.karaboyFace} />
       </View>
 
       <Pressable style={styles.searchBar} onPress={() => search(query)}>

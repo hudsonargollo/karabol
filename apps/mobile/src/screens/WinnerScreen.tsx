@@ -1,23 +1,40 @@
-import { Pressable, Share, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, Share, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { MascotBlock } from '../components/MascotBlock';
 import { Confetti } from '../components/Confetti';
+import { karabol } from '../assets/karabol';
 import { colors, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Winner'>;
+
+// Marisol (Cambita) vs Diego (Alpacho) are the only two Battle contestants
+// today, so the champion art/badge/title just switches on which of the two
+// names won — swap this for real per-round contestant data once battles
+// have a backend.
+const WINNER_ART: Record<string, { hero: number; badge: number; title: string }> = {
+  MARISOL: { hero: karabol.cambitaHero, badge: karabol.reinaDeLaNoche, title: '¡CAMPEONA!' },
+  DIEGO: { hero: karabol.alpachoHero, badge: karabol.reiDeLaNoche, title: '¡CAMPEÓN!' },
+};
 
 // 06 Winner — reached from Battle once voting closes.
 export function WinnerScreen({ route, navigation }: Props) {
   const { venueId, tableId, winnerLabel, votePink, voteLime } = route.params;
   const votes = votePink + voteLime;
+  const art = WINNER_ART[winnerLabel] ?? WINNER_ART.DIEGO;
 
   return (
     <View style={styles.screen}>
       <Confetti />
-      <Text style={styles.crown}>👑</Text>
-      <Text style={styles.title}>¡CAMPEÓN!</Text>
-      <MascotBlock label={winnerLabel} accent={colors.lime} size={200} style={{ marginVertical: spacing.lg }} />
+      <Image source={art.badge} style={styles.badge} resizeMode="contain" />
+      <Text style={styles.title}>{art.title}</Text>
+      <MascotBlock
+        label={winnerLabel}
+        accent={colors.lime}
+        size={200}
+        source={art.hero}
+        style={{ marginVertical: spacing.lg }}
+      />
       <Text style={styles.name}>{winnerLabel}</Text>
 
       <View style={styles.stats}>
@@ -52,7 +69,7 @@ export function WinnerScreen({ route, navigation }: Props) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg, alignItems: 'center', paddingTop: spacing.xxl },
-  crown: { fontSize: 34, marginTop: spacing.lg },
+  badge: { width: 96, height: 96, marginTop: spacing.lg },
   title: {
     color: colors.lime,
     fontSize: 30,

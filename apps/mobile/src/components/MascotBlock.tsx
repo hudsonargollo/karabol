@@ -1,19 +1,20 @@
 import { useEffect, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text } from 'react-native';
+import { Animated, Image, Pressable, StyleSheet, Text, type ImageSourcePropType } from 'react-native';
 import { colors } from '../theme';
 
 type Props = {
   label: string;
   accent: string;
   size?: number;
+  source?: ImageSourcePropType;
   onTap?: () => void;
   style?: object;
 };
 
-// Placeholder for the KARABOL mascot artwork (final PNGs not yet wired in).
-// Idle-bobs continuously; tapping fires a quick pop + the caller's onTap
-// (used to cycle "poses" once real art is in place).
-export function MascotBlock({ label, accent, size = 96, onTap, style }: Props) {
+// KARABOL mascot art (falls back to a lettered placeholder box if no
+// `source` is given). Idle-bobs continuously; tapping fires a quick pop +
+// the caller's onTap (used to cycle "poses").
+export function MascotBlock({ label, accent, size = 96, source, onTap, style }: Props) {
   const bob = useRef(new Animated.Value(0)).current;
   const pop = useRef(new Animated.Value(1)).current;
 
@@ -44,9 +45,13 @@ export function MascotBlock({ label, accent, size = 96, onTap, style }: Props) {
         style,
       ]}
     >
-      <Text style={[styles.label, { color: accent }]} numberOfLines={1}>
-        {label}
-      </Text>
+      {source ? (
+        <Image source={source} style={styles.image} resizeMode="cover" />
+      ) : (
+        <Text style={[styles.label, { color: accent }]} numberOfLines={1}>
+          {label}
+        </Text>
+      )}
     </Animated.View>
   );
 
@@ -60,6 +65,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
+  image: { width: '100%', height: '100%' },
   label: { fontSize: 11, fontWeight: '800', letterSpacing: 0.5, textTransform: 'uppercase' },
 });

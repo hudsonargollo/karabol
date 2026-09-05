@@ -9,6 +9,7 @@ import { getSocket } from '../lib/socket';
 import { BottomNav } from '../components/BottomNav';
 import { MascotBlock } from '../components/MascotBlock';
 import { EqBars } from '../components/EqBars';
+import { karabol } from '../assets/karabol';
 import { colors, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Queue'>;
@@ -65,7 +66,7 @@ export function QueueScreen({ route, navigation }: Props) {
 
       {nowPlaying && (
         <View style={styles.nowCard}>
-          <MascotBlock label="MC" accent={colors.cyan} size={72} />
+          <MascotBlock label="LA PARABA" accent={colors.cyan} size={72} source={karabol.parabaHero} />
           <View style={{ flex: 1 }}>
             <Text style={styles.nowLabel}>AHORA CANTA</Text>
             <Text style={styles.nowTitle} numberOfLines={2}>

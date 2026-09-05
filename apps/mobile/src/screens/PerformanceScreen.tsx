@@ -8,6 +8,7 @@ import { api } from '../lib/api';
 import { Button } from '../components/Button';
 import { Screen } from '../components/Screen';
 import { MascotBlock } from '../components/MascotBlock';
+import { karabol } from '../assets/karabol';
 import { colors, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Performance'>;
@@ -84,7 +85,13 @@ export function PerformanceScreen({ route, navigation }: Props) {
   return (
     <Screen center>
       <Text style={styles.cue}>¡TE TOCA!</Text>
-      <MascotBlock label="TÚ" accent={colors.magenta} size={140} style={{ marginVertical: spacing.lg }} />
+      <MascotBlock
+        label="TÚ"
+        accent={colors.magenta}
+        size={140}
+        source={karabol.karaboyHero}
+        style={{ marginVertical: spacing.lg }}
+      />
       <Text style={styles.score}>{finalScore ?? liveScore ?? '—'}</Text>
       {finalScore !== null ? (
         <Text style={styles.finalLabel}>Puntaje final</Text>
