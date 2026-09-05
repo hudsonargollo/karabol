@@ -78,9 +78,10 @@ export default function App() {
 }
 
 // On native this is inert (the device screen already is the frame). On the
-// web build it keeps the app at a phone-shaped width instead of stretching
-// full-bleed across a desktop browser.
+// web build it keeps the app phone-shaped — capped on both axes, not just
+// width — instead of stretching full-bleed (or oddly tall) on a desktop
+// browser.
 const styles = StyleSheet.create({
   webBackdrop: { flex: 1, backgroundColor: colors.surface3, alignItems: 'center', justifyContent: 'center' },
-  phoneFrame: { flex: 1, width: '100%', maxWidth: 430, overflow: 'hidden' },
+  phoneFrame: { flex: 1, width: '100%', maxWidth: 430, maxHeight: 932, overflow: 'hidden' },
 });
