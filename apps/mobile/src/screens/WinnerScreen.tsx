@@ -2,6 +2,7 @@ import { Image, Pressable, Share, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { MascotBlock } from '../components/MascotBlock';
+import { TypedBubble } from '../components/TypedBubble';
 import { Confetti } from '../components/Confetti';
 import { karabol } from '../assets/karabol';
 import { colors, spacing, type } from '../theme';
@@ -28,13 +29,10 @@ export function WinnerScreen({ route, navigation }: Props) {
       <Confetti />
       <Image source={art.badge} style={styles.badge} resizeMode="contain" />
       <Text style={styles.title}>{art.title}</Text>
-      <MascotBlock
-        label={winnerLabel}
-        accent={colors.lime}
-        size={200}
-        source={art.hero}
-        style={{ marginVertical: spacing.lg }}
-      />
+      <View style={styles.heroWrap}>
+        <MascotBlock label={winnerLabel} accent={colors.lime} size={200} source={art.hero} />
+        <TypedBubble accent={colors.lime} text="¡La reina de la noche!" style={styles.winBubble} />
+      </View>
       <Text style={styles.name}>{winnerLabel}</Text>
 
       <View style={styles.stats}>
@@ -78,6 +76,8 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 0 },
     ...type.displayItalic,
   },
+  heroWrap: { marginVertical: spacing.lg, position: 'relative' },
+  winBubble: { position: 'absolute', top: 4, right: -12 },
   name: { color: colors.ink, fontSize: 20, ...type.heading },
   stats: { flexDirection: 'row', gap: spacing.xl, marginTop: spacing.lg },
   stat: { alignItems: 'center' },

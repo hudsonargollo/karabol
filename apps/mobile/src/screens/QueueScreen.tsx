@@ -8,11 +8,21 @@ import { authStore } from '../lib/authStore';
 import { getSocket } from '../lib/socket';
 import { BottomNav } from '../components/BottomNav';
 import { MascotBlock } from '../components/MascotBlock';
+import { TypedBubble } from '../components/TypedBubble';
 import { EqBars } from '../components/EqBars';
 import { karabol } from '../assets/karabol';
 import { colors, spacing, type } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Queue'>;
+
+// La Paraba comments on the queue — tapping her cycles the line, matching
+// the mockup's mascot commentary (no backend for this, just flavor text).
+const PARABA_LINES = [
+  '¡Qué notón! Next up en la lista 🎤',
+  'Nadie se salva de cantar esta noche.',
+  '¡Ese aplauso se sintió hasta la barra!',
+  'Prepárate, que tu turno se acerca.',
+];
 
 // 03 La Cola — 3.2/3.3 live queue view. Auto-advances to the scoring screen
 // when this table's entry starts playing.
@@ -21,6 +31,7 @@ export function QueueScreen({ route, navigation }: Props) {
   const [entries, setEntries] = useState<QueueEntry[]>([]);
   const [nowPlaying, setNowPlaying] = useState<QueueEntry | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lineIdx, setLineIdx] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,7 +77,13 @@ export function QueueScreen({ route, navigation }: Props) {
 
       {nowPlaying && (
         <View style={styles.nowCard}>
-          <MascotBlock label="LA PARABA" accent={colors.cyan} size={72} source={karabol.parabaHero} />
+          <MascotBlock
+            label="LA PARABA"
+            accent={colors.cyan}
+            size={72}
+            source={karabol.parabaHero}
+            onTap={() => setLineIdx((n) => (n + 1) % PARABA_LINES.length)}
+          />
           <View style={{ flex: 1 }}>
             <Text style={styles.nowLabel}>AHORA CANTA</Text>
             <Text style={styles.nowTitle} numberOfLines={2}>
@@ -76,6 +93,11 @@ export function QueueScreen({ route, navigation }: Props) {
               <EqBars />
             </View>
           </View>
+          <TypedBubble
+            accent={colors.cyan}
+            text={PARABA_LINES[lineIdx]}
+            style={{ position: 'absolute', top: -14, right: 8 }}
+          />
         </View>
       )}
 

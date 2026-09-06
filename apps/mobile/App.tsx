@@ -3,6 +3,7 @@ import { DarkTheme, NavigationContainer, type Theme } from '@react-navigation/na
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SplashScreen } from './src/screens/SplashScreen';
 import { AuthScreen } from './src/screens/AuthScreen';
+import { CrewPickScreen } from './src/screens/CrewPickScreen';
 import { TableJoinScreen } from './src/screens/TableJoinScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { QueueScreen } from './src/screens/QueueScreen';
@@ -19,6 +20,7 @@ import { colors } from './src/theme';
 export type RootStackParamList = {
   Splash: undefined;
   Auth: undefined;
+  CrewPick: undefined;
   TableJoin: undefined;
   Home: { venueId: string; tableId: string };
   Queue: { venueId: string; tableId: string };
@@ -61,6 +63,7 @@ export default function App() {
           >
             <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Auth" component={AuthScreen} options={{ title: 'Welcome' }} />
+            <Stack.Screen name="CrewPick" component={CrewPickScreen} options={{ title: 'Elige tu crew' }} />
             <Stack.Screen name="TableJoin" component={TableJoinScreen} options={{ title: 'Scan your table' }} />
             <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Queue" component={QueueScreen} options={{ headerShown: false }} />

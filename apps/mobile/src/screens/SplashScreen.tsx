@@ -8,11 +8,17 @@ import { colors, spacing } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Splash'>;
 
-// 01 Splash — resolves where "ENTRAR AL SHOW" should land (TableJoin if
-// already signed in, Auth otherwise) while the brand glows in.
+// Crossfades through the bundled crew art — the mockup uses a dedicated
+// slideshow shot per crew member (lineup, walk-in, selfie…), but only
+// these hero shots are bundled locally today.
+const SLIDES = [karabol.crew, karabol.karaboyHero, karabol.cambitaHero, karabol.alpachoHero, karabol.parabaHero, karabol.bearHero];
+const SLIDE_MS = 3000;
+
 export function SplashScreen({ navigation }: Props) {
   const [target, setTarget] = useState<keyof RootStackParamList>('Auth');
+  const [slide, setSlide] = useState(0);
   const glow = useRef(new Animated.Value(0)).current;
+  const slideOpacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     authStore.getToken().then((token) => setTarget(token ? 'TableJoin' : 'Auth'));
@@ -27,11 +33,21 @@ export function SplashScreen({ navigation }: Props) {
     return () => loop.stop();
   }, [glow]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      Animated.timing(slideOpacity, { toValue: 0, duration: 450, useNativeDriver: true }).start(() => {
+        setSlide((n) => (n + 1) % SLIDES.length);
+        Animated.timing(slideOpacity, { toValue: 1, duration: 450, useNativeDriver: true }).start();
+      });
+    }, SLIDE_MS);
+    return () => clearInterval(timer);
+  }, [slideOpacity]);
+
   const shadowRadius = glow.interpolate({ inputRange: [0, 1], outputRange: [16, 34] });
 
   return (
     <View style={styles.screen}>
-      <Image source={karabol.crew} style={styles.crewBand} resizeMode="cover" />
+      <Animated.Image source={SLIDES[slide]} style={[styles.crewBand, { opacity: slideOpacity }]} resizeMode="cover" />
       <View style={styles.fade} />
 
       <View style={styles.content}>

@@ -14,12 +14,27 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Battle'>;
 // contestants are a fixed local demo; only the vote tally is live state.
 const ROUND = { label: 'ROUND 2 · DUELO DE CUMBIA', left: 'MARISOL', right: 'DIEGO' };
 
+const MC_LINES = [
+  'Dos voces, un trono. ¡Vota ya!',
+  '¡El público nunca miente, bro!',
+  'Se está poniendo bueno esto…',
+  '¡Griten por su favorito!',
+];
+
 export function BattleScreen({ route, navigation }: Props) {
   const { venueId, tableId } = route.params;
   const [votePink, setVotePink] = useState(96);
   const [voteLime, setVoteLime] = useState(88);
+  const [lineIdx, setLineIdx] = useState(0);
+  const [pow, setPow] = useState(false);
   const total = votePink + voteLime;
   const pinkPct = Math.round((votePink / total) * 100);
+
+  function vote(setter: (fn: (v: number) => number) => void) {
+    setter((v) => v + 1);
+    setPow(true);
+    setTimeout(() => setPow(false), 700);
+  }
 
   function closeVoting() {
     const winnerLabel = votePink >= voteLime ? ROUND.left : ROUND.right;
@@ -54,19 +69,30 @@ export function BattleScreen({ route, navigation }: Props) {
       </View>
 
       <View style={styles.voteButtons}>
-        <Pressable style={[styles.voteBtn, { borderColor: colors.magenta }]} onPress={() => setVotePink((v) => v + 1)}>
+        {pow && (
+          <View style={styles.powBadge}>
+            <Text style={styles.powBadgeText}>¡POW!</Text>
+          </View>
+        )}
+        <Pressable style={[styles.voteBtn, { borderColor: colors.magenta }]} onPress={() => vote(setVotePink)}>
           <Text style={[styles.voteBtnText, { color: colors.magenta }]}>🔥 {ROUND.left}</Text>
         </Pressable>
-        <Pressable style={[styles.voteBtn, { borderColor: colors.lime }]} onPress={() => setVoteLime((v) => v + 1)}>
+        <Pressable style={[styles.voteBtn, { borderColor: colors.lime }]} onPress={() => vote(setVoteLime)}>
           <Text style={[styles.voteBtnText, { color: colors.lime }]}>🔥 {ROUND.right}</Text>
         </Pressable>
       </View>
 
       <View style={styles.mcRow}>
-        <MascotBlock label="JUCUMARI" accent={colors.cyan} size={56} source={karabol.bearHero} />
+        <MascotBlock
+          label="JUCUMARI"
+          accent={colors.cyan}
+          size={56}
+          source={karabol.bearHero}
+          onTap={() => setLineIdx((n) => (n + 1) % MC_LINES.length)}
+        />
         <TypedBubble
           accent={colors.cyan}
-          text="Dos voces, un trono. ¡Vota ya!"
+          text={MC_LINES[lineIdx]}
           style={{ flex: 1, maxWidth: undefined }}
         />
       </View>
@@ -109,7 +135,19 @@ const styles = StyleSheet.create({
   voteBarLime: { backgroundColor: colors.lime },
   voteCounts: { flexDirection: 'row', justifyContent: 'space-between', marginTop: spacing.xs },
   voteCount: { fontSize: 14, fontWeight: '700' },
-  voteButtons: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.xl, marginTop: spacing.md },
+  voteButtons: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.xl, marginTop: spacing.md, position: 'relative' },
+  powBadge: {
+    position: 'absolute',
+    top: -18,
+    left: '50%',
+    marginLeft: -34,
+    backgroundColor: colors.magenta,
+    transform: [{ rotate: '-6deg' }],
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    zIndex: 2,
+  },
+  powBadgeText: { color: colors.limeInk, fontSize: 13, fontWeight: '800', fontStyle: 'italic' },
   voteBtn: { flex: 1, borderWidth: 1, paddingVertical: spacing.md, alignItems: 'center' },
   voteBtnText: { fontSize: 14, fontWeight: '700' },
   mcRow: {
