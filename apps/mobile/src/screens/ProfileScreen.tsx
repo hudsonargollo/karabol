@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { authStore } from '../lib/authStore';
+import { crewById } from '../lib/crew';
 import { BottomNav } from '../components/BottomNav';
 import { MascotBlock } from '../components/MascotBlock';
+import { TypedBubble } from '../components/TypedBubble';
 import { karabol } from '../assets/karabol';
 import { colors, spacing, type } from '../theme';
 
@@ -23,12 +25,14 @@ const CREW = [
 export function ProfileScreen({ route, navigation }: Props) {
   const { venueId, tableId } = route.params;
   const [name, setName] = useState('');
+  const [crewName, setCrewName] = useState<string | null>(null);
   const [bio, setBio] = useState('Karaoke es vida, bro…');
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(bio);
 
   useEffect(() => {
     authStore.getUser().then((u) => setName(u?.displayName ?? 'Cantante'));
+    authStore.getCrew().then((id) => setCrewName(id ? crewById(id).name : null));
   }, []);
 
   async function logout() {
@@ -38,9 +42,15 @@ export function ProfileScreen({ route, navigation }: Props) {
 
   return (
     <View style={styles.screen}>
+      <View style={styles.banner}>
+        <Image source={karabol.houseparty} style={styles.bannerImg} resizeMode="cover" />
+        <TypedBubble accent={colors.purple} text={bio} style={styles.bannerBubble} />
+      </View>
+
       <View style={styles.header}>
         <View>
           <Text style={styles.name}>{name}</Text>
+          {crewName && <Text style={styles.crewLine}>Team {crewName}</Text>}
           {editing ? (
             <TextInput
               style={styles.bioInput}
@@ -105,14 +115,18 @@ export function ProfileScreen({ route, navigation }: Props) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.surface },
+  banner: { margin: spacing.xl, marginBottom: 0, height: 180, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.bg },
+  bannerImg: { width: '100%', height: '100%' },
+  bannerBubble: { position: 'absolute', bottom: 10, left: 12 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     padding: spacing.xl,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.lg,
   },
   name: { color: colors.ink, fontSize: 22, ...type.heading },
+  crewLine: { color: colors.purple, fontSize: 12, fontWeight: '600', marginTop: 2 },
   bio: { color: colors.inkFaint, fontSize: 13, marginTop: 2 },
   bioInput: { color: colors.ink, fontSize: 13, marginTop: 2, borderBottomWidth: 1, borderBottomColor: colors.lime, minWidth: 180 },
   statsGrid: { flexDirection: 'row', gap: 1, backgroundColor: colors.line, marginHorizontal: spacing.xl },

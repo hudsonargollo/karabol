@@ -3,6 +3,7 @@
 export const karabol = {
   logo: require('../../assets/karabol/logo.webp'),
   crew: require('../../assets/karabol/crew.webp'),
+  houseparty: require('../../assets/karabol/houseparty.webp'),
   karaboyHero: require('../../assets/karabol/karaboy-hero.webp'),
   karaboyFace: require('../../assets/karabol/karaboy-face.webp'),
   alpachoHero: require('../../assets/karabol/alpacho-hero.webp'),
