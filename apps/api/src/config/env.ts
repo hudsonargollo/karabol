@@ -19,6 +19,7 @@ export const env = {
   internalServiceSecret: required('INTERNAL_SERVICE_SECRET', 'dev-internal-secret-change-me'),
   appEncryptionKey: required('APP_ENCRYPTION_KEY', 'dev-encryption-key-change-me'),
   youtubeApiKey: process.env.YOUTUBE_API_KEY,
-  // Web-type OAuth client ID from Google Cloud Console — see /auth/google.
+  // Web-type OAuth client from Google Cloud Console — see /auth/google.
   googleClientId: process.env.GOOGLE_CLIENT_ID,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
 };

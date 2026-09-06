@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as AuthSession from 'expo-auth-session';
-import * as Crypto from 'expo-crypto';
 import * as WebBrowser from 'expo-web-browser';
 import type { RootStackParamList } from '../../App';
 import { api } from '../lib/api';
@@ -18,7 +17,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Auth'>;
 
 WebBrowser.maybeCompleteAuthSession();
 
-// Google's OAuth2 discovery doc for the implicit id_token flow — the
+// Google's OAuth2 discovery doc for the authorization-code flow — the
 // building block `expo-auth-session/providers/google` wraps; using it
 // directly here since its exact wrapper API has moved around across SDKs.
 const discovery = {
@@ -26,11 +25,6 @@ const discovery = {
   tokenEndpoint: 'https://oauth2.googleapis.com/token',
 };
 
-// Google's implicit id_token flow requires a nonce; verifyIdToken() on the
-// server checks signature/issuer/audience/expiry but doesn't currently
-// cross-check this value, so it's a request-shape requirement here rather
-// than a full replay-protection guarantee yet.
-const nonce = Crypto.randomUUID();
 const redirectUri = AuthSession.makeRedirectUri();
 
 // Google-only sign-in per product direction (no phone/password form, and
@@ -47,8 +41,11 @@ export function AuthScreen({ navigation }: Props) {
       clientId: GOOGLE_CLIENT_ID,
       scopes: ['openid', 'profile', 'email'],
       redirectUri,
-      responseType: AuthSession.ResponseType.IdToken,
-      extraParams: { nonce },
+      responseType: AuthSession.ResponseType.Code,
+      // PKCE is for public clients that can't hold a secret; the code
+      // exchange happens on our backend, authenticated with
+      // GOOGLE_CLIENT_SECRET, so it isn't needed here.
+      usePKCE: false,
     },
     discovery,
   );
@@ -62,16 +59,16 @@ export function AuthScreen({ navigation }: Props) {
       if (response?.type === 'error') setError('No se pudo entrar con Google');
       return;
     }
-    const idToken = response.params.id_token;
-    if (!idToken) {
-      setError('Google no devolvió un token válido');
+    const code = response.params.code;
+    if (!code) {
+      setError('Google no devolvió un código válido');
       return;
     }
 
     setSubmitting(true);
     setError(null);
     api
-      .google(idToken)
+      .google(code, redirectUri)
       .then(async ({ token, user, isNewUser }) => {
         await authStore.setToken(token);
         await authStore.setUser(user);

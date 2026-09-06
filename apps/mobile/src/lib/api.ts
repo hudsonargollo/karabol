@@ -51,10 +51,10 @@ export interface QueueEntry {
 }
 
 export const api = {
-  google: (idToken: string) =>
+  google: (code: string, redirectUri: string) =>
     request<{ token: string; user: AuthUser; isNewUser: boolean }>('/auth/google', {
       method: 'POST',
-      body: JSON.stringify({ idToken }),
+      body: JSON.stringify({ code, redirectUri }),
     }),
 
   joinTable: (venueSlug: string, pin: string) =>

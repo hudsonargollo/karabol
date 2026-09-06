@@ -7,7 +7,7 @@ import { prisma } from '../config/db.js';
 import { requireAuth, signToken } from '../middleware/auth.js';
 
 export const authRouter = Router();
-const googleClient = new OAuth2Client(env.googleClientId);
+const googleClient = new OAuth2Client({ clientId: env.googleClientId, clientSecret: env.googleClientSecret });
 
 const registerSchema = z.object({
   email: z.string().email().optional(),
@@ -32,26 +32,37 @@ authRouter.post('/register', async (req, res) => {
   return res.status(201).json({ token, user: { id: user.id, role: user.role, displayName: user.displayName } });
 });
 
-const googleSchema = z.object({ idToken: z.string() });
+const googleSchema = z.object({ code: z.string(), redirectUri: z.string() });
 
 // Patron sign-in via Google — the mobile app's only auth method (no
-// phone/password form). Finds an existing patron by the verified email, or
-// creates one on first sign-in; either way the client gets `isNewUser` back
-// so it knows whether to route into CrewPick or straight past it.
+// phone/password form). The client only ever handles an authorization
+// `code` (expo-auth-session, PKCE off); the exchange for tokens happens
+// here, authenticated with GOOGLE_CLIENT_SECRET, which must never reach
+// client code. Finds an existing patron by the verified email, or creates
+// one on first sign-in; either way the client gets `isNewUser` back so it
+// knows whether to route into CrewPick or straight past it.
 authRouter.post('/google', async (req, res) => {
   const parsed = googleSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
-  if (!env.googleClientId) return res.status(500).json({ error: 'Google sign-in is not configured' });
+  if (!env.googleClientId || !env.googleClientSecret) {
+    return res.status(500).json({ error: 'Google sign-in is not configured' });
+  }
 
   let email: string | undefined;
   let name: string | undefined;
   try {
-    const ticket = await googleClient.verifyIdToken({ idToken: parsed.data.idToken, audience: env.googleClientId });
+    const { tokens } = await googleClient.getToken({
+      code: parsed.data.code,
+      redirect_uri: parsed.data.redirectUri,
+    });
+    if (!tokens.id_token) throw new Error('No id_token in Google token response');
+    const ticket = await googleClient.verifyIdToken({ idToken: tokens.id_token, audience: env.googleClientId });
     const payload = ticket.getPayload();
     email = payload?.email;
     name = payload?.name;
-  } catch {
-    return res.status(401).json({ error: 'Invalid Google token' });
+  } catch (err) {
+    console.warn('[auth/google] token exchange failed', err);
+    return res.status(401).json({ error: 'Invalid Google authorization code' });
   }
   if (!email) return res.status(400).json({ error: 'Google account has no email' });
 
