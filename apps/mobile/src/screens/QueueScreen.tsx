@@ -52,7 +52,7 @@ export function QueueScreen({ route, navigation }: Props) {
       socket.on(SocketEvent.NOW_PLAYING, (entry: QueueEntry) => {
         setNowPlaying(entry);
         if (entry.tableId === tableId) {
-          navigation.navigate('Performance', { queueEntryId: entry.id, venueId, tableId });
+          navigation.navigate('YourTurn', { queueEntryId: entry.id, venueId, tableId, title: entry.title });
         }
       });
     });

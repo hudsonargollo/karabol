@@ -7,6 +7,7 @@ import { CrewPickScreen } from './src/screens/CrewPickScreen';
 import { TableJoinScreen } from './src/screens/TableJoinScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { QueueScreen } from './src/screens/QueueScreen';
+import { YourTurnScreen } from './src/screens/YourTurnScreen';
 import { BattleScreen } from './src/screens/BattleScreen';
 import { WinnerScreen } from './src/screens/WinnerScreen';
 import { LeaderboardScreen } from './src/screens/LeaderboardScreen';
@@ -24,6 +25,7 @@ export type RootStackParamList = {
   TableJoin: undefined;
   Home: { venueId: string; tableId: string };
   Queue: { venueId: string; tableId: string };
+  YourTurn: { queueEntryId: string; venueId: string; tableId: string; title: string };
   Battle: { venueId: string; tableId: string };
   Profile: { venueId: string; tableId: string };
   Performance: { queueEntryId: string; venueId: string; tableId: string };
@@ -67,6 +69,7 @@ export default function App() {
             <Stack.Screen name="TableJoin" component={TableJoinScreen} options={{ title: 'Scan your table' }} />
             <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Queue" component={QueueScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="YourTurn" component={YourTurnScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Battle" component={BattleScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Performance" component={PerformanceScreen} options={{ title: 'Your turn!' }} />
