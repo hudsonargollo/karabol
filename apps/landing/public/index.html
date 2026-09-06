@@ -3,507 +3,445 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Karabol — Karaoke y recompensas para tu local</title>
-<meta name="description" content="Lista balanceada por mesa, puntuación de voz en tiempo real y niveles con premio real (descuentos, tragos gratis) integrados a tu POS. Karaoke de nueva generación para bares y discotecas en Bolivia." />
+<title>KARABOL — El karaoke, organizado</title>
+<meta name="description" content="La lista de canciones del bar, en tu celular. Escaneas la mesa, eliges tu pista, sabes cuándo te toca y la noche se convierte en competencia. En el bar o en tu casa." />
+<meta property="og:title" content="KARABOL — El karaoke, organizado" />
+<meta property="og:description" content="La lista de canciones del bar, en tu celular. Escaneas la mesa, eliges tu pista, sabes cuándo te toca." />
+<meta property="og:image" content="/assets/crew-lineup.webp" />
+<meta name="theme-color" content="#0c0e10" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#150c13;
-    --surface:#20141f;
-    --surface-2:#2b1c2a;
-    --ink:#f8eee0;
-    --ink-soft:#c2a6bb;
-    --ink-faint:#8a7086;
-    --gold:#f4b93c;
-    --gold-ink:#241505;
-    --fuchsia:#ef2f7b;
-    --turquoise:#23c9c0;
-    --tri-red:#d81e2c;
-    --tri-green:#1c8a4b;
-    --bronze:#c17a3f;
-    --silver:#c7ccd3;
-    --line:rgba(248,238,224,0.14);
-    --line-strong:rgba(248,238,224,0.26);
-    --shadow: 0 30px 60px -28px rgba(0,0,0,0.65);
+    --bg:#0c0e10;
+    --surface:#121416;
+    --surface-2:#1c1e20;
+    --ink:#e2e2e5;
+    --ink-soft:#b9b5ab;
+    --ink-faint:#898a8b;
+    --lime:#c7f300;
+    --lime-ink:#0c0e10;
+    --magenta:#ff2ea6;
+    --cyan:#2ee6ff;
+    --purple:#d8b9ff;
+    --line:rgba(255,255,255,0.1);
+    --line-strong:rgba(255,255,255,0.25);
+    --shadow: 0 30px 60px -28px rgba(0,0,0,0.75);
   }
-  @media (prefers-color-scheme: light){
-    :root:not([data-theme="dark"]){
-      --bg:#f6ede2;
-      --surface:#ffffff;
-      --surface-2:#efe2d8;
-      --ink:#221019;
-      --ink-soft:#6c4a5e;
-      --ink-faint:#9c7f90;
-      --gold:#b9821c;
-      --gold-ink:#fffaf0;
-      --fuchsia:#c81f66;
-      --turquoise:#0f8f88;
-      --tri-red:#b8202b;
-      --tri-green:#177a42;
-      --bronze:#a06430;
-      --silver:#7c828b;
-      --line:rgba(34,16,25,0.14);
-      --line-strong:rgba(34,16,25,0.26);
-      --shadow: 0 30px 60px -32px rgba(34,16,25,0.25);
-    }
-  }
-  :root[data-theme="light"]{
-    --bg:#f6ede2; --surface:#ffffff; --surface-2:#efe2d8;
-    --ink:#221019; --ink-soft:#6c4a5e; --ink-faint:#9c7f90;
-    --gold:#b9821c; --gold-ink:#fffaf0; --fuchsia:#c81f66; --turquoise:#0f8f88;
-    --tri-red:#b8202b; --tri-green:#177a42; --bronze:#a06430; --silver:#7c828b;
-    --line:rgba(34,16,25,0.14); --line-strong:rgba(34,16,25,0.26);
-    --shadow: 0 30px 60px -32px rgba(34,16,25,0.25);
-  }
-  :root[data-theme="dark"]{
-    --bg:#150c13; --surface:#20141f; --surface-2:#2b1c2a;
-    --ink:#f8eee0; --ink-soft:#c2a6bb; --ink-faint:#8a7086;
-    --gold:#f4b93c; --gold-ink:#241505; --fuchsia:#ef2f7b; --turquoise:#23c9c0;
-    --tri-red:#d81e2c; --tri-green:#1c8a4b; --bronze:#c17a3f; --silver:#c7ccd3;
-    --line:rgba(248,238,224,0.14); --line-strong:rgba(248,238,224,0.26);
-    --shadow: 0 30px 60px -28px rgba(0,0,0,0.65);
-  }
-
   *{ box-sizing:border-box; }
   html{ scroll-behavior:smooth; }
-  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Manrope',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
-  ::selection{ background:var(--gold); color:var(--gold-ink); }
-  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
-  h1,h2,h3{ margin:0; text-wrap:balance; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Geist',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  ::selection{ background:var(--lime); color:var(--lime-ink); }
+  img{ max-width:100%; display:block; }
+  a{ color:var(--lime); }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 6vw; }
+  h1,h2,h3{ margin:0; font-family:'Sora',sans-serif; font-weight:800; letter-spacing:-0.02em; text-wrap:balance; }
   p{ margin:0; }
 
-  /* ---- aguayo weave strip: recurring textile motif ---- */
-  .aguayo{
-    height:12px;
-    background:
-      repeating-linear-gradient(45deg, var(--fuchsia) 0 7px, transparent 7px 14px),
-      repeating-linear-gradient(-45deg, var(--turquoise) 0 7px, transparent 7px 14px),
-      var(--gold);
+  @keyframes idleBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+  @keyframes glowPulse{ 0%,100%{ box-shadow:0 0 18px rgba(199,243,0,0.45); } 50%{ box-shadow:0 0 42px rgba(199,243,0,0.85); } }
+  @keyframes eqBar{ 0%,100%{ transform:scaleY(0.3); } 50%{ transform:scaleY(1); } }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.35; } }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; }
   }
 
-  /* ---- starburst badge: logomark / medal / spotlight, one shape language ---- */
-  .burst{
-    --ring: var(--gold);
-    display:inline-grid; place-items:center;
-    border-radius:50%;
-    background: repeating-conic-gradient(var(--ring) 0deg 9deg, transparent 9deg 20deg);
-  }
-  .burst .core{
-    border-radius:50%; background:var(--bg); display:grid; place-items:center; width:78%; height:78%;
-  }
-  .burst.silver{ --ring: var(--silver); }
-  .burst.bronze{ --ring: var(--bronze); }
-
-  .eyebrow{
-    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
-    color:var(--fuchsia); display:inline-flex; align-items:center; gap:10px; padding:5px 12px 5px 5px;
-    border:1px dashed var(--line-strong); border-radius:99px;
-  }
-
-  header{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter:blur(10px); }
-  .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 32px; }
-  .brand{ display:flex; align-items:center; gap:12px; }
-  .brand .burst{ width:38px; height:38px; }
-  .brand .burst .core svg{ width:18px; height:18px; }
-  .logo{ font-family:'Anton',ui-sans-serif,sans-serif; font-size:1.5rem; letter-spacing:0.01em; display:flex; }
-  .logo .kara{ color:var(--ink); }
-  .logo .bol{ color:var(--gold); }
-  nav.links{ display:flex; gap:32px; }
-  nav.links a{ color:var(--ink-soft); text-decoration:none; font-size:0.9rem; font-weight:600; font-family:'Baloo 2',sans-serif; }
+  /* ---- header ---- */
+  header{ position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .nav{ display:flex; align-items:center; justify-content:space-between; gap:24px; padding:14px 0; }
+  .nav .wordmark{ height:32px; }
+  nav.links{ display:flex; gap:28px; }
+  nav.links a{ color:var(--ink-soft); text-decoration:none; font-size:0.9rem; font-weight:600; }
   nav.links a:hover, nav.links a:focus-visible{ color:var(--ink); }
-  .navlist{ display:flex; align-items:center; gap:30px; }
+  .navlist{ display:flex; align-items:center; gap:28px; }
 
-  .btn{ display:inline-flex; align-items:stretch; text-decoration:none; cursor:pointer; border-radius:99px; overflow:hidden;
-    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:0.95rem; border:2px solid transparent; }
-  .btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
-  .btn span.seg{ padding:11px 20px; display:flex; align-items:center; gap:8px; }
-  .btn-solid{ background:var(--gold); color:var(--gold-ink); }
-  .btn-solid .divider{ border-left:2px dashed color-mix(in srgb, var(--gold-ink) 45%, transparent); }
-  .btn-solid:hover{ filter:brightness(1.06); }
-  .btn-ghost{ border-color:var(--line-strong); color:var(--ink); }
-  .btn-ghost:hover{ border-color:var(--fuchsia); color:var(--fuchsia); }
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; cursor:pointer;
+    font-family:'Sora',sans-serif; font-weight:700; font-size:0.92rem; padding:13px 22px; border:1px solid transparent; white-space:nowrap; }
+  .btn:focus-visible{ outline:2px solid var(--lime); outline-offset:2px; }
+  .btn-solid{ background:var(--lime); color:var(--lime-ink); animation:glowPulse 2.8s infinite; }
+  .btn-solid:hover{ background:#aed500; color:var(--lime-ink); }
+  .btn-ghost{ border-color:var(--line-strong); color:var(--ink); background:rgba(12,14,16,0.5); }
+  .btn-ghost:hover{ border-color:var(--lime); color:var(--lime); }
+  .btn-outline{ border-color:var(--lime); color:var(--lime); }
+  .btn-outline:hover{ background:rgba(199,243,0,0.1); }
+  .btn-sm{ padding:10px 18px; font-size:0.85rem; }
+
+  .eyebrow{ font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; padding:6px 14px; border:1px solid var(--line-strong); display:inline-block; }
 
   /* ---- hero ---- */
-  .hero{ padding:64px 0 60px; display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; position:relative; overflow:clip; }
-  .hero-glow{ position:absolute; top:-120px; left:-160px; width:520px; height:520px; border-radius:50%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--gold) 22%, transparent) 0%, transparent 70%); pointer-events:none; z-index:0; }
-  .hero > *{ position:relative; z-index:1; }
-  /* ---- WebGL sparkle field behind the hero, à la threejs.org ---- */
-  #hero-gl{ position:absolute!important; inset:0; z-index:0!important; width:100%; height:100%; display:block;
-    pointer-events:none; opacity:0; transition:opacity 1.2s ease; mix-blend-mode:var(--gl-blend,normal);
-    mask-image:linear-gradient(to right, transparent 0%, transparent 52%, black 80%);
-    -webkit-mask-image:linear-gradient(to right, transparent 0%, transparent 52%, black 80%); }
-  #hero-gl.is-ready{ opacity:0.8; }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) #hero-gl{ --gl-blend:screen; } }
-  :root[data-theme="dark"] #hero-gl{ --gl-blend:screen; }
-  .hero h1{ font-family:'Anton',sans-serif; font-weight:400; font-size:clamp(2.1rem,4.4vw,3.3rem); line-height:1.06; margin-top:20px; letter-spacing:0.005em; }
-  .wipe{ position:relative; display:inline-block; white-space:nowrap; }
-  .wipe .base{ color:var(--ink-faint); }
-  .wipe .fill{ position:absolute; inset:0; color:var(--gold); overflow:hidden; width:0; white-space:nowrap;
-    animation: wipeIn 3.6s cubic-bezier(.65,0,.35,1) infinite; }
-  .wipe .ball{ position:absolute; bottom:-10px; width:8px; height:8px; border-radius:50%; background:var(--gold);
-    animation: ballMove 3.6s cubic-bezier(.65,0,.35,1) infinite; box-shadow:0 0 8px var(--gold); }
-  @keyframes wipeIn{ 0%,8%{width:0;} 62%,100%{width:100%;} }
-  @keyframes ballMove{ 0%,8%{left:0;} 62%,100%{left:calc(100% - 8px);} 100%{left:calc(100% - 8px);} }
-  @media (prefers-reduced-motion: reduce){
-    .wipe .fill{ animation:none; width:100%; }
-    .wipe .ball{ animation:none; left:calc(100% - 8px); }
-  }
+  .hero{ position:relative; background:#000; display:flex; flex-direction:column; align-items:center; overflow:hidden; }
+  .hero-copy{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; padding:56px 6vw 40px; width:100%; }
+  .hero-copy .wordmark{ width:min(80%, 560px); filter:drop-shadow(0 0 40px rgba(255,46,166,0.35)); }
+  .hero h1{ font-size:clamp(1.9rem,4vw,3.4rem); line-height:1.05; max-width:20ch; }
+  .hero h1 .accent{ color:var(--lime); text-shadow:0 0 30px rgba(199,243,0,0.45); }
+  .hero .lede{ font-size:clamp(0.95rem,1.3vw,1.1rem); color:var(--ink-soft); max-width:54ch; line-height:1.55; text-shadow:0 2px 12px rgba(0,0,0,0.8); }
+  .hero .ctas{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:6px; }
+  .hero-photo{ position:relative; width:100%; min-height:340px; flex:1; }
+  .hero-photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 25%; }
+  .hero-photo::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, #000 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 75%, var(--bg) 100%); }
+  .hero-pills{ position:relative; z-index:2; margin-top:-64px; padding:0 6vw 28px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .hero-pill{ display:flex; gap:10px; align-items:center; background:rgba(12,14,16,0.85); backdrop-filter:blur(8px); border:1px solid var(--line-strong); padding:10px 16px; font-size:0.82rem; color:var(--ink-soft); }
+  .hero-pill .dot{ width:8px; height:8px; flex-shrink:0; }
+  .hero-pill b{ color:var(--ink); }
 
-  .hero p.lede{ margin-top:20px; font-size:1.06rem; line-height:1.6; color:var(--ink-soft); max-width:48ch; }
-  .hero .ctas{ display:flex; gap:14px; margin-top:30px; flex-wrap:wrap; }
+  section{ padding:80px 0; border-top:1px solid var(--line); }
+  .section-tight{ padding-top:64px; padding-bottom:64px; }
+  .kicker{ font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:12px; }
+  .section-head h2{ font-size:clamp(1.7rem,3.4vw,2.6rem); max-width:24ch; line-height:1.08; }
+  .section-head p{ margin-top:14px; color:var(--ink-soft); font-size:1rem; line-height:1.6; max-width:48ch; }
 
-  /* ---- scoreboard card ---- */
-  .board{ background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
-  .board-head{ display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid var(--line); }
-  .board-title{ font-family:'Baloo 2',sans-serif; font-weight:700; font-size:0.95rem; }
-  .live{ display:inline-flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:0.7rem; color:var(--fuchsia); letter-spacing:0.08em; }
-  .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--fuchsia); animation:pulse 1.4s ease-in-out infinite; }
-  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
-  .row{ display:flex; align-items:center; gap:14px; padding:13px 20px; border-bottom:1px solid var(--line); }
-  .row:last-child{ border-bottom:none; }
-  .row .table{ font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--ink-faint); width:52px; flex-shrink:0; }
-  .row .who{ flex:1; min-width:0; }
-  .row .song{ font-weight:700; font-size:0.92rem; font-family:'Baloo 2',sans-serif; }
-  .row .meta{ font-size:0.76rem; color:var(--ink-faint); margin-top:2px; }
-  .row .pct{ font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; font-weight:600; font-size:1rem; width:44px; text-align:right; }
-  .pill{ font-family:'IBM Plex Mono',monospace; font-size:0.66rem; letter-spacing:0.06em; text-transform:uppercase; padding:3px 8px; border-radius:99px; }
-  .pill.gold{ background:color-mix(in srgb, var(--gold) 22%, transparent); color:var(--gold); }
-  .pill.silver{ background:color-mix(in srgb, var(--silver) 22%, transparent); color:var(--silver); }
-  .pill.bronze{ background:color-mix(in srgb, var(--bronze) 22%, transparent); color:var(--bronze); }
-  .board-foot{ padding:12px 20px; font-size:0.78rem; color:var(--ink-faint); background:var(--surface-2); }
+  /* ---- how it works ---- */
+  .steps{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .step{ background:var(--surface); padding:28px; display:flex; flex-direction:column; gap:12px; }
+  .step .idx{ font-family:'Sora',sans-serif; font-size:2.2rem; font-weight:800; }
+  .step h3{ font-size:1.15rem; }
+  .step p{ color:var(--ink-faint); font-size:0.9rem; line-height:1.55; }
 
-  /* ---- stats ---- */
-  .stats{ padding:36px 0; }
-  .stats .wrap{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; }
-  .stat{ padding:0 26px; border-left:1px solid var(--line); }
-  .stat:first-child{ border-left:none; padding-left:0; }
-  .stat .num{ font-family:'IBM Plex Mono',monospace; font-size:1.6rem; color:var(--turquoise); font-variant-numeric:tabular-nums; }
-  .stat .label{ margin-top:6px; font-size:0.84rem; color:var(--ink-soft); line-height:1.4; }
+  /* ---- two-col feature layout (singers / venues / house party) ---- */
+  .split{ display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:48px; align-items:center; }
+  .split-copy{ display:flex; flex-direction:column; gap:20px; align-items:flex-start; }
+  .featlist{ display:flex; flex-direction:column; gap:16px; margin-top:4px; }
+  .featlist .row{ display:flex; gap:14px; }
+  .featlist .arrow{ font-family:'Sora',sans-serif; font-weight:800; flex-shrink:0; }
+  .featlist .t{ font-weight:600; font-size:0.95rem; }
+  .featlist .d{ color:var(--ink-faint); font-size:0.88rem; margin-top:2px; line-height:1.5; }
 
-  section{ padding:88px 0; }
-  .section-head{ max-width:640px; margin-bottom:52px; }
-  .section-head h2{ font-family:'Anton',sans-serif; font-weight:400; font-size:clamp(1.7rem,3.2vw,2.3rem); margin-top:14px; }
-  .section-head p{ margin-top:14px; color:var(--ink-soft); font-size:1.02rem; line-height:1.6; }
+  .venue-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:14px; width:100%; margin-top:8px; }
+  .venue-card{ background:var(--bg); border:1px solid var(--line); padding:16px; }
+  .venue-card .t{ font-weight:700; font-size:0.95rem; color:var(--lime); }
+  .venue-card .d{ color:var(--ink-faint); font-size:0.82rem; margin-top:4px; line-height:1.5; }
 
-  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
-  .step{ padding:0 30px 0 0; border-right:1px solid var(--line); }
-  .step:last-child{ border-right:none; }
-  .step .idx{ font-family:'IBM Plex Mono',monospace; color:var(--fuchsia); font-size:0.82rem; padding-bottom:14px; margin-bottom:16px; border-bottom:1px solid var(--line-strong); }
-  .step h3{ font-family:'Baloo 2',sans-serif; font-size:1.15rem; font-weight:700; }
-  .step p{ margin-top:10px; color:var(--ink-soft); font-size:0.94rem; line-height:1.6; }
+  /* ---- phone mockups ---- */
+  .phones{ display:flex; gap:16px; justify-content:center; align-items:flex-end; }
+  .phone{ flex:1 1 0; min-width:0; max-width:220px; height:460px; background:var(--surface); border:1px solid var(--line-strong); overflow:hidden; display:flex; flex-direction:column; box-shadow:var(--shadow); }
+  .phone .statusbar{ padding:10px 14px 0; display:flex; justify-content:space-between; font-size:9px; color:var(--ink-faint); }
+  .phone-queue .title{ padding:12px 14px 4px; font-weight:700; font-size:15px; }
+  .phone-queue .now{ margin:4px 14px 0; background:var(--surface-2); border:1px solid rgba(46,230,255,0.3); padding:8px; display:flex; gap:8px; align-items:center; }
+  .phone-queue .now img{ width:40px; height:40px; object-fit:cover; }
+  .phone-queue .now .label{ font-size:8px; letter-spacing:0.1em; color:var(--cyan); }
+  .phone-queue .now .name{ font-size:11px; font-weight:700; }
+  .phone-queue .rows{ padding:8px 14px; display:flex; flex-direction:column; font-size:10px; }
+  .phone-queue .rows .r{ display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--line); }
+  .phone-queue .rows .r:last-child{ border-bottom:none; }
+  .phone-queue .rows .pos{ font-weight:700; margin-right:4px; }
+  .phone-queue .rows .eta{ color:var(--ink-faint); }
+  .phone-queue .cta{ margin:auto 14px 14px; background:var(--lime); color:var(--lime-ink); font-family:'Sora',sans-serif; font-weight:700; font-size:10px; text-align:center; padding:10px; }
+  .phone-turn{ align-items:center; background:#000; }
+  .phone-turn .cue{ margin-top:14px; font-family:'Sora',sans-serif; font-style:italic; font-size:22px; font-weight:800; color:var(--magenta); text-shadow:0 0 22px rgba(255,46,166,0.65); }
+  .phone-turn img{ width:150px; height:150px; object-fit:cover; margin-top:6px; }
+  .phone-turn .song{ font-size:12px; font-weight:700; margin-top:8px; }
+  .phone-turn .artist{ font-size:9px; color:var(--ink-faint); }
+  .phone-turn .cta{ margin:auto 14px 14px; align-self:stretch; background:var(--lime); color:var(--lime-ink); font-family:'Sora',sans-serif; font-weight:800; font-size:11px; text-align:center; padding:11px; }
 
-  .features{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
-  .feature{ background:var(--bg); padding:32px; display:flex; gap:16px; }
-  .feature .icn{ width:38px; height:38px; border-radius:10px; display:grid; place-items:center; flex-shrink:0; }
-  .feature .icn svg{ width:20px; height:20px; }
-  .feature h3{ font-family:'Baloo 2',sans-serif; font-size:1.08rem; font-weight:700; }
-  .feature .tag{ font-family:'IBM Plex Mono',monospace; font-size:0.66rem; color:var(--ink-faint); font-weight:400; letter-spacing:0.05em; display:block; margin-top:2px; }
-  .feature p{ margin-top:8px; color:var(--ink-soft); font-size:0.94rem; line-height:1.6; }
+  /* ---- TV mockup ---- */
+  .tv-wrap{ position:relative; }
+  .tv{ width:100%; aspect-ratio:16/9; background:var(--bg); border:1px solid var(--line-strong); display:flex; overflow:hidden; box-shadow:var(--shadow); }
+  .tv-stage{ flex:1.2; position:relative; }
+  .tv-stage img{ width:100%; height:100%; object-fit:cover; }
+  .tv-stage::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 50%, rgba(12,14,16,0.95)); }
+  .tv-stage .wordmark{ position:absolute; top:6%; left:5%; width:26%; height:auto; z-index:1; }
+  .tv-stage .now{ position:absolute; bottom:8%; left:5%; z-index:1; }
+  .tv-stage .now .label{ font-size:clamp(7px,0.7vw,11px); letter-spacing:0.12em; color:var(--cyan); }
+  .tv-stage .now .name{ font-size:clamp(12px,1.4vw,22px); font-weight:800; font-family:'Sora',sans-serif; }
+  .tv-eq{ display:flex; gap:3px; align-items:flex-end; height:14px; margin-top:4px; }
+  .tv-eq span{ width:4px; height:100%; background:var(--lime); animation:eqBar 0.75s infinite; transform-origin:bottom; }
+  .tv-eq span:nth-child(2){ background:var(--magenta); animation-duration:0.85s; }
+  .tv-eq span:nth-child(3){ background:var(--cyan); animation-duration:0.6s; }
+  .tv-list{ flex:1; border-left:1px solid var(--line-strong); padding:4%; display:flex; flex-direction:column; gap:6%; font-size:clamp(7px,0.75vw,12px); }
+  .tv-list .title{ font-weight:700; font-size:clamp(9px,1vw,15px); font-family:'Sora',sans-serif; }
+  .tv-list .r{ display:flex; justify-content:space-between; padding:4% 0; border-bottom:1px solid var(--line); }
+  .tv-list .r.next{ background:rgba(199,243,0,0.08); }
+  .tv-list .r .pos{ font-weight:700; }
+  .tv-list .foot{ margin-top:auto; color:var(--ink-faint); }
+  .tv-tag{ position:absolute; bottom:-16px; right:4%; background:var(--lime); color:var(--lime-ink); font-family:'Sora',sans-serif; font-weight:800; font-size:0.75rem; padding:8px 14px; }
 
-  .tiers{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-  .tier{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:30px 24px; text-align:center; }
-  .tier .burst{ width:84px; height:84px; margin:0 auto 16px; }
-  .tier .burst .core span{ font-family:'Anton',sans-serif; font-size:1.6rem; }
-  .tier.gold .core span{ color:var(--gold); }
-  .tier.silver .core span{ color:var(--silver); }
-  .tier.bronze .core span{ color:var(--bronze); }
-  .tier .name{ font-family:'Baloo 2',sans-serif; font-weight:800; letter-spacing:0.02em; }
-  .tier .range{ font-family:'IBM Plex Mono',monospace; font-size:0.86rem; color:var(--ink-faint); margin-top:6px; }
-  .tier .perk{ margin-top:14px; color:var(--ink-soft); font-size:0.92rem; line-height:1.55; }
-  .tiers-note{ margin-top:22px; font-size:0.82rem; color:var(--ink-faint); }
+  /* ---- house party ---- */
+  .hp{ position:relative; overflow:hidden; }
+  .hp-glow{ position:absolute; inset:0; background:radial-gradient(ellipse at 80% 50%, rgba(46,230,255,0.14), transparent 55%); pointer-events:none; }
+  .hp-art{ position:relative; display:flex; justify-content:center; align-items:center; min-height:360px; }
+  .hp-art img{ width:min(85%, 380px); animation:idleBob 3.6s ease-in-out infinite; filter:drop-shadow(0 30px 60px rgba(0,0,0,0.6)); }
+  .hp-code{ position:absolute; top:8%; right:4%; background:var(--bg); border:1px solid var(--cyan); padding:14px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
+  .hp-code .l{ font-size:10px; letter-spacing:0.12em; color:var(--ink-faint); }
+  .hp-code .v{ font-family:'Sora',sans-serif; font-size:1.7rem; font-weight:800; letter-spacing:0.08em; color:var(--cyan); }
+  .hp-code .n{ font-size:11px; color:var(--ink-faint); }
+  .hp-say{ position:absolute; bottom:6%; left:2%; background:var(--bg); border:1px solid var(--line-strong); padding:10px 12px; font-size:0.78rem; max-width:220px; }
+  .hp-say b{ color:var(--purple); }
 
-  footer{ padding:56px 0 0; }
-  .foot-top{ display:flex; justify-content:space-between; align-items:flex-end; gap:40px; flex-wrap:wrap; padding-bottom:48px; }
-  .foot-top h2{ font-family:'Anton',sans-serif; font-weight:400; font-size:clamp(1.7rem,3.4vw,2.5rem); max-width:15ch; }
-  .foot-cities{ margin-top:30px; display:flex; gap:24px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; color:var(--ink-faint); }
-  .foot-bottom{ padding:24px 32px; display:flex; justify-content:space-between; color:var(--ink-faint); font-size:0.8rem; flex-wrap:wrap; gap:10px; max-width:1180px; margin:0 auto; }
+  /* ---- AI/battle/ranking strip ---- */
+  .strip{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:32px; }
+  .strip .card .tag{ font-size:0.78rem; letter-spacing:0.14em; }
+  .strip .card h3{ font-size:1.3rem; margin-top:10px; }
+  .strip .card p{ color:var(--ink-faint); font-size:0.9rem; line-height:1.55; margin-top:8px; }
 
-  @media (max-width:860px){
-    .hero{ grid-template-columns:1fr; }
-    .stats .wrap{ grid-template-columns:repeat(2,1fr); row-gap:22px; }
-    .stat{ border-left:none; padding-left:0; }
-    .steps{ grid-template-columns:1fr; row-gap:26px; }
-    .step{ border-right:none; padding-right:0; }
-    .features{ grid-template-columns:1fr; }
-    .tiers{ grid-template-columns:1fr; }
+  /* ---- crew ---- */
+  .crew-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; margin-bottom:28px; }
+  .crew-lineup{ width:100%; border:1px solid var(--line); margin-bottom:16px; }
+  .crew-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(130px,1fr)); gap:12px; }
+  .crew-card{ background:var(--surface); border:1px solid var(--line); overflow:hidden; transition:border-color 0.15s ease; }
+  .crew-card:hover{ border-color:var(--accent, var(--lime)); }
+  .crew-card .ph{ width:100%; aspect-ratio:1; overflow:hidden; background:var(--bg); }
+  .crew-card .ph img{ width:100%; height:100%; object-fit:cover; }
+  .crew-card .meta{ padding:10px 12px; }
+  .crew-card .name{ font-family:'Sora',sans-serif; font-weight:700; font-size:0.85rem; color:var(--accent, var(--lime)); }
+  .crew-card .role{ font-size:0.72rem; color:var(--ink-faint); margin-top:2px; }
+
+  /* ---- download ---- */
+  .download{ position:relative; text-align:center; display:flex; flex-direction:column; align-items:center; gap:20px; overflow:hidden; }
+  .download-glow{ position:absolute; inset:0; background:radial-gradient(ellipse at 50% 100%, rgba(199,243,0,0.16), transparent 60%); pointer-events:none; }
+  .download > *{ position:relative; }
+  .download h2{ font-size:clamp(2rem,4vw,3.4rem); }
+  .download p{ color:var(--ink-soft); font-size:1.05rem; max-width:42ch; }
+  .download .ctas{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+
+  footer{ padding:0 0 32px; border-top:1px solid var(--line); }
+  .foot-top{ display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; padding:32px 0; }
+  .foot-top .wordmark{ height:36px; }
+  .foot-links{ display:flex; gap:20px; flex-wrap:wrap; font-size:0.8rem; }
+  .foot-links a{ color:var(--ink-faint); text-decoration:none; }
+  .foot-links a:hover{ color:var(--ink); }
+  .foot-bottom{ font-size:0.8rem; color:var(--ink-faint); }
+
+  @media (max-width:820px){
     nav.links{ display:none; }
+    .phones{ flex-direction:column; align-items:center; }
+    .phone{ max-width:280px; }
+    .split > *:first-child{ order:1; }
   }
 </style>
 </head>
 <body>
 
-<div class="aguayo"></div>
 <header>
   <div class="nav wrap">
-    <div class="brand">
-      <span class="burst"><span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3M9 21h6"/></svg></span></span>
-      <div class="logo"><span class="kara">KARA</span><span class="bol">BOL</span></div>
-    </div>
+    <img class="wordmark" src="/assets/logo.webp" alt="KARABOL" />
     <div class="navlist">
       <nav class="links">
-        <a href="#producto">Producto</a>
         <a href="#como-funciona">Cómo funciona</a>
-        <a href="#niveles">Niveles</a>
+        <a href="#cantantes">Cantantes</a>
+        <a href="#bares">Bares</a>
+        <a href="#houseparty">House Party</a>
+        <a href="#crew">Crew</a>
       </nav>
-      <a class="btn btn-solid" href="mailto:hudsonargollo@gmail.com?subject=Demo%20Karabol">
-        <span class="seg">Solicitar demo</span>
-      </a>
+      <a class="btn btn-solid btn-sm" href="#descargar">Descargar</a>
     </div>
   </div>
 </header>
 
-<main class="wrap">
-
-  <section class="hero" id="producto" style="padding-top:56px;">
-    <div class="hero-glow"></div>
-    <canvas id="hero-gl" aria-hidden="true"></canvas>
-    <div>
-      <span class="eyebrow"><span class="burst" style="width:16px;height:16px;"><span class="core" style="width:60%;height:60%;"></span></span>Noche de karaoke · Bolivia</span>
-      <h1>Micrófono libre. Lista de turnos justa. <span class="wipe"><span class="base">Puntaje real.</span><span class="fill" aria-hidden="true">Puntaje real.</span><span class="ball" aria-hidden="true"></span></span></h1>
-      <p class="lede">Karabol arma la lista de turnos por mesa — quién canta después, cuántas canciones le quedan — de forma balanceada para que todos tengan su momento en el escenario, y convierte la noche en una competencia amistosa que paga en descuentos, tragos gratis y lo que tu local quiera premiar.</p>
-      <div class="ctas">
-        <a class="btn btn-solid" href="mailto:hudsonargollo@gmail.com?subject=Demo%20Karabol">
-          <span class="seg">🎤 Solicitar demo</span><span class="divider"></span><span class="seg">Hoy</span>
-        </a>
-        <a class="btn btn-ghost" href="#como-funciona"><span class="seg">Ver cómo funciona</span></a>
-      </div>
+<section class="hero">
+  <div class="hero-copy">
+    <img class="wordmark" src="/assets/wordmark-hero.webp" alt="KARABOL" />
+    <h1>El karaoke, <span class="accent">organizado.</span></h1>
+    <p class="lede">La lista de canciones del bar, en tu celular. Escaneas la mesa, eliges tu pista, sabes cuándo te toca y la noche se convierte en competencia. En el bar o en tu casa.</p>
+    <div class="ctas">
+      <a class="btn btn-solid" href="#descargar">Descargar la app</a>
+      <a class="btn btn-ghost" href="#bares">Soy un bar →</a>
     </div>
+  </div>
+  <div class="hero-photo">
+    <img src="/assets/crew-lineup.webp" alt="La crew de KARABOL" loading="eager" />
+  </div>
+  <div class="hero-pills">
+    <div class="hero-pill"><span class="dot" style="background:var(--lime); box-shadow:0 0 10px var(--lime);"></span><b>Lista en vivo</b>&nbsp;· sin papelitos</div>
+    <div class="hero-pill"><span class="dot" style="background:var(--magenta); box-shadow:0 0 10px var(--magenta);"></span><b>Battles</b>&nbsp;· el público vota</div>
+    <div class="hero-pill"><span class="dot" style="background:var(--cyan); box-shadow:0 0 10px var(--cyan);"></span><b>House Party</b>&nbsp;· tu sala es el bar</div>
+  </div>
+</section>
 
-    <div class="board">
-      <div class="board-head">
-        <div class="board-title">Ranking en vivo — viernes 21:40</div>
-        <div class="live"><span class="live-dot"></span>EN VIVO</div>
-      </div>
-      <div class="row">
-        <div class="table">MESA 4</div>
-        <div class="who"><div class="song">🎙️ Cielito Lindo <span class="pill gold">Oro</span></div><div class="meta">cantando ahora · 200–3.500 Hz</div></div>
-        <div class="pct" style="color:var(--gold)">92%</div>
-      </div>
-      <div class="row">
-        <div class="table">MESA 7</div>
-        <div class="who"><div class="song">La Bamba <span class="pill silver">Plata</span></div><div class="meta">turno anterior</div></div>
-        <div class="pct" style="color:var(--ink-soft)">76%</div>
-      </div>
-      <div class="row">
-        <div class="table">MESA 1</div>
-        <div class="who"><div class="song">Volver, Volver <span class="pill bronze">Bronce</span></div><div class="meta">turno anterior</div></div>
-        <div class="pct" style="color:var(--ink-soft)">64%</div>
-      </div>
-      <div class="row">
-        <div class="table">MESA 2</div>
-        <div class="who"><div class="song">en lista de turnos</div><div class="meta">2 canciones restantes en su turno</div></div>
-        <div class="pct" style="color:var(--ink-faint)">—</div>
-      </div>
-      <div class="board-foot">Lista de turnos con densidad: ninguna mesa canta dos veces seguidas mientras otra espera.</div>
-    </div>
-  </section>
-
-  <div class="aguayo"></div>
-
-  <section class="stats">
-    <div class="wrap">
-      <div class="stat"><div class="num">3</div><div class="label">canciones por mesa, límite en modo solista</div></div>
-      <div class="stat"><div class="num">200–3.500 Hz</div><div class="label">rango vocal filtrado por el motor DSP</div></div>
-      <div class="stat"><div class="num">24 h</div><div class="label">vigencia de caché del descuento en el POS</div></div>
-      <div class="stat"><div class="num">0</div><div class="label">apps que el cliente necesita instalar</div></div>
-    </div>
-  </section>
-
-  <section id="como-funciona">
-    <div class="section-head">
-      <span class="eyebrow">De la mesa al puntaje</span>
-      <h2>Tres pasos, un solo celular.</h2>
-      <p>Sin pulseras, sin fichas, sin pedirle al mesero la lista de canciones en papel.</p>
-    </div>
+<section id="como-funciona">
+  <div class="wrap">
+    <div class="kicker">CÓMO FUNCIONA</div>
+    <h2 style="margin-bottom:40px;">De la mesa al escenario en tres pasos</h2>
     <div class="steps">
       <div class="step">
-        <div class="idx">01 — Escanear</div>
-        <h3>El cliente escanea el QR de su mesa</h3>
-        <p>Elige su canción del catálogo de YouTube desde el navegador, sin registrarse con contraseña.</p>
+        <span class="idx" style="color:var(--lime);">01</span>
+        <h3>Escanea tu mesa</h3>
+        <p>El QR te conecta al bar y a la lista de esa noche. Cuenta en 10 segundos con tu celular.</p>
       </div>
       <div class="step">
-        <div class="idx">02 — Cantar</div>
-        <h3>El micrófono transmite en vivo</h3>
-        <p>El audio se filtra a la banda vocal y se compara nota por nota contra la pista, con octavas corregidas para no penalizar voces graves.</p>
+        <span class="idx" style="color:var(--magenta);">02</span>
+        <h3>Elige la versión perfecta</h3>
+        <p>Buscas la canción y KARABOL te muestra las pistas karaoke de YouTube ordenadas por la AI: tono original o bajo, dúo, versión party. Eliges y entras a la lista.</p>
       </div>
       <div class="step">
-        <div class="idx">03 — Ganar</div>
-        <h3>El puntaje se convierte en puntos</h3>
-        <p>Al cruzar un nivel, el descuento se aplica solo en el POS del local — o el mesero lo redime a mano desde su panel.</p>
+        <span class="idx" style="color:var(--cyan);">03</span>
+        <h3>Te toca. Canta. Reina.</h3>
+        <p>Aviso dos turnos antes. La pantalla del bar te anuncia, cantas, el público puntúa. Sumas al ranking del bar y de la ciudad.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <div class="section-head">
-      <span class="eyebrow">Lo que trae la plataforma</span>
-      <h2>Construido para la noche real, no para la demo.</h2>
-    </div>
-    <div class="features">
-      <div class="feature">
-        <span class="icn" style="background:color-mix(in srgb, var(--fuchsia) 18%, transparent);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--fuchsia)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="15" width="7" height="7" rx="1.5"/><rect x="14" y="15" width="7" height="7" rx="1.5"/></svg></span>
-        <div><h3>Lista de turnos con densidad<span class="tag">round-robin por mesa</span></h3><p>El algoritmo reparte turnos por mesa activa, no por orden de llegada — así ninguna mesa acapara la noche y todos tienen su mejor momento en el escenario.</p></div>
-      </div>
-      <div class="feature">
-        <span class="icn" style="background:color-mix(in srgb, var(--turquoise) 18%, transparent);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--turquoise)" stroke-width="2" stroke-linecap="round"><path d="M3 12h3l2-7 4 14 2-9 2 5h5"/></svg></span>
-        <div><h3>Puntaje por tono<span class="tag">YIN + bandpass vocal</span></h3><p>Detección de tono real con filtrado de 200–3.500 Hz y plegado de octava, no un número aleatorio disfrazado de puntaje.</p></div>
-      </div>
-      <div class="feature">
-        <span class="icn" style="background:color-mix(in srgb, var(--gold) 18%, transparent);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 7 21l5-2.5 5 2.5-1.5-8.5"/></svg></span>
-        <div><h3>Niveles con premio real<span class="tag">bronce · plata · oro</span></h3><p>Descuento, trago gratis o lo que tu local decida premiar — configurable por nivel, y aplicado sin que el mesero tenga que acordarse.</p></div>
-      </div>
-      <div class="feature">
-        <span class="icn" style="background:color-mix(in srgb, var(--tri-green) 18%, transparent);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--tri-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 5-3 5H4z"/><path d="M4 4v16"/></svg></span>
-        <div><h3>Funciona con o sin POS<span class="tag">agnóstico</span></h3><p>Si el local no tiene un POS conectado, el staff redime el QR desde el panel de venue. El flujo del cliente no cambia.</p></div>
+<section id="cantantes">
+  <div class="wrap split">
+    <div class="split-copy">
+      <span class="eyebrow" style="color:var(--magenta); border-color:rgba(255,46,166,0.4);">PARA CANTANTES</span>
+      <h2>Nunca más preguntar<br>"¿cuándo me toca?"</h2>
+      <div class="featlist">
+        <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">La lista en tu bolsillo</div><div class="d">Tu posición en vivo, tiempo estimado y aviso 2 turnos antes. Reordena o pasa tu turno sin hablar con nadie.</div></div></div>
+        <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">Tu canción, tu versión</div><div class="d">Elige la pista de YouTube que te queda: tono original, más bajo, dúo con dos voces, remix party. La AI te recomienda la mejor.</div></div></div>
+        <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">Reta y que el bar decida</div><div class="d">Battle 1 vs 1 con la misma canción o distinta. Todo el bar vota desde su celular mientras cantan.</div></div></div>
+        <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">Tu perfil de cantante</div><div class="d">Puntos, rachas, victorias y canciones favoritas te siguen de bar en bar. Sube en el ranking de la ciudad.</div></div></div>
       </div>
     </div>
-  </section>
+    <div class="phones">
+      <div class="phone phone-queue">
+        <div class="statusbar"><span>9:41</span><span>▲ ▮ ■</span></div>
+        <div class="title">La Lista <span style="color:var(--lime);">· 6</span></div>
+        <div class="now">
+          <img src="/assets/paraba-hero.webp" alt="" loading="lazy" />
+          <div><div class="label">AHORA CANTA</div><div class="name">Diego</div></div>
+        </div>
+        <div class="rows">
+          <div class="r"><span><span class="pos" style="color:var(--lime);">2</span> Marisol</span><span class="eta">~4 min</span></div>
+          <div class="r" style="color:var(--magenta); font-weight:700;"><span>3 Tú</span><span>~8 min</span></div>
+          <div class="r"><span><span class="pos">4</span> Ana + Beto</span><span class="eta">~12 min</span></div>
+        </div>
+        <div class="cta">+ UNIRME A LA LISTA</div>
+      </div>
+      <div class="phone phone-turn">
+        <div class="statusbar" style="align-self:stretch;"><span>9:41</span><span>▲ ▮ ■</span></div>
+        <div class="cue">¡TE TOCA!</div>
+        <img src="/assets/diablada-hero.webp" alt="" loading="lazy" />
+        <div class="song">"Llorando se fue"</div>
+        <div class="artist">Los Kjarkas · 3:42</div>
+        <div class="cta">SUBIR AL MIC 🎤</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <section id="niveles">
-    <div class="section-head">
-      <span class="eyebrow">Programa de niveles</span>
-      <h2>Umbrales de ejemplo — cada local define los suyos.</h2>
-      <p>Los puntos se acumulan por interpretación puntuada, como una competencia amistosa entre mesas. Estos son los valores por defecto al activar Karabol; se ajustan desde el panel del venue.</p>
+<section id="bares" style="background:var(--surface);">
+  <div class="wrap split">
+    <div class="tv-wrap">
+      <div class="tv">
+        <div class="tv-stage">
+          <img src="/assets/houseparty.webp" alt="Pantalla del bar" loading="lazy" />
+          <img class="wordmark" src="/assets/wordmark-hero.webp" alt="" />
+          <div class="now">
+            <div class="label">AHORA EN EL ESCENARIO</div>
+            <div class="name">Diego · "Bohemian Rhapsody"</div>
+            <div class="tv-eq"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+        <div class="tv-list">
+          <div class="title">La Lista</div>
+          <div class="r next"><span class="pos" style="color:var(--lime);">1 Marisol</span><span style="color:var(--lime);">SIGUIENTE</span></div>
+          <div class="r"><span class="pos" style="color:var(--magenta);">2 Carlos</span><span style="color:var(--ink-faint);">~8 min</span></div>
+          <div class="r"><span class="pos" style="color:var(--ink-faint);">3 Ana + Beto</span><span style="color:var(--ink-faint);">~12 min</span></div>
+          <div class="r"><span class="pos" style="color:var(--ink-faint);">4 Vale</span><span style="color:var(--ink-faint);">~15 min</span></div>
+          <div class="foot">Escanea el QR de tu mesa · <span style="color:var(--lime);">karabol.app</span></div>
+        </div>
+      </div>
+      <div class="tv-tag">PANTALLA DEL BAR · TV</div>
     </div>
-    <div class="tiers">
-      <div class="tier bronze"><span class="burst bronze"><span class="core"><span>B</span></span></span><div class="name">Bronce</div><div class="range">0–299 pts</div><p class="perk">5% de descuento en la siguiente cuenta.</p></div>
-      <div class="tier silver"><span class="burst silver"><span class="core"><span>P</span></span></span><div class="name">Plata</div><div class="range">300–799 pts</div><p class="perk">10% de descuento, aplicado automático si hay POS conectado.</p></div>
-      <div class="tier gold"><span class="burst"><span class="core"><span>O</span></span></span><div class="name">Oro</div><div class="range">800+ pts</div><p class="perk">15% de descuento, un trago de cortesía y prioridad en la lista de turnos de la noche.</p></div>
+    <div class="split-copy">
+      <span class="eyebrow" style="color:var(--lime); border-color:rgba(199,243,0,0.4);">PARA BARES Y VENUES</span>
+      <h2>Tu noche de karaoke,<br>sin caos.</h2>
+      <p style="color:var(--ink-soft); font-size:1rem; line-height:1.55; max-width:48ch;">Un QR por mesa y una TV. La lista se arma sola, la pantalla anuncia, y tu equipo atiende mesas en vez de administrar papelitos y discusiones por el turno.</p>
+      <div class="venue-grid">
+        <div class="venue-card"><div class="t">Lista automática</div><div class="d">Orden justo, sin favoritos ni discusiones. Reglas configurables: máximo por mesa, tiempo por canción.</div></div>
+        <div class="venue-card"><div class="t">Pantalla de bar</div><div class="d">TV con la lista en vivo, el que canta y la crew animando. Se conecta a cualquier TV o proyector.</div></div>
+        <div class="venue-card"><div class="t">Battles y eventos</div><div class="d">Noches temáticas, torneos semanales, ranking del bar. La gente vuelve para defender su corona.</div></div>
+        <div class="venue-card"><div class="t">Datos de la noche</div><div class="d">Qué se canta, qué mesas participan, hora pico. Promos y consumo por mesa desde la app.</div></div>
+      </div>
+      <a class="btn btn-outline" style="margin-top:8px;" href="mailto:hudsonargollo@gmail.com?subject=Registrar%20mi%20bar%20en%20Karabol">Registrar mi bar →</a>
     </div>
-    <p class="tiers-note">Los porcentajes y umbrales son configurables por local desde el panel de venue — no son un límite del sistema.</p>
-  </section>
+  </div>
+</section>
 
-</main>
+<section id="houseparty" class="hp">
+  <div class="hp-glow"></div>
+  <div class="wrap split">
+    <div class="split-copy">
+      <span class="eyebrow" style="color:var(--cyan); border-color:rgba(46,230,255,0.4);">NUEVO · HOUSE PARTY</span>
+      <h2>Tu casa. Tu bar.<br><span style="color:var(--cyan); text-shadow:0 0 24px rgba(46,230,255,0.5);">Tu lista.</span></h2>
+      <p style="color:var(--ink-soft); font-size:1rem; line-height:1.55; max-width:48ch;">Crea una fiesta, comparte el código y tus amigos entran desde su celular. La TV de tu sala se convierte en la pantalla del bar — con la crew animando, votaciones y corona al final de la noche.</p>
+      <div class="featlist">
+        <div class="row"><span class="arrow" style="color:var(--cyan);">→</span><div style="font-size:0.9rem;"><b>Un código, todos adentro.</b> <span style="color:var(--ink-faint);">Sin instalar nada en la TV: abre karabol.app/tv y listo.</span></div></div>
+        <div class="row"><span class="arrow" style="color:var(--cyan);">→</span><div style="font-size:0.9rem;"><b>El anfitrión manda.</b> <span style="color:var(--ink-faint);">Reordena, salta, pausa, pone reglas (máx. 2 baladas seguidas).</span></div></div>
+        <div class="row"><span class="arrow" style="color:var(--cyan);">→</span><div style="font-size:0.9rem;"><b>Modos de fiesta.</b> <span style="color:var(--ink-faint);">Ruleta de canciones, dúos sorpresa, battle bracket, rey de la casa.</span></div></div>
+        <div class="row"><span class="arrow" style="color:var(--cyan);">→</span><div style="font-size:0.9rem;"><b>Tus puntos cuentan.</b> <span style="color:var(--ink-faint);">Lo que ganas en casa suma a tu ranking en los bares.</span></div></div>
+      </div>
+      <a class="btn" style="background:var(--cyan); color:var(--lime-ink); margin-top:8px;" href="#descargar">Armar mi House Party →</a>
+    </div>
+    <div class="hp-art">
+      <img src="/assets/capi-hero.webp" alt="Capi en la sala" loading="lazy" />
+      <div class="hp-code">
+        <div class="l">CÓDIGO DE FIESTA</div>
+        <div class="v">CAPI-42</div>
+        <div class="n">8 amigos en la lista</div>
+      </div>
+      <div class="hp-say"><b>CAPI:</b> Karaoke en pijama es vida, bro.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" style="background:var(--surface);">
+  <div class="wrap strip">
+    <div class="card">
+      <div class="tag" style="color:var(--purple);">✦ KARABOL AI</div>
+      <h3>Aprende lo que canta tu ciudad</h3>
+      <p>Aprende de cada noche: qué canciones prenden, qué pistas de YouTube suenan bien, en qué tono canta la gente. Etiqueta cada tema (HOT, DÚO, FÁCIL, PARTY, CLASSIC) y te pone la mejor versión primero.</p>
+    </div>
+    <div class="card">
+      <div class="tag" style="color:var(--magenta);">⚔ BATTLE MODE</div>
+      <h3>El público decide</h3>
+      <p>Dos voces, un trono. Todo el bar vota desde su celular mientras cantan. Rachas, badges y la corona de la noche para el ganador.</p>
+    </div>
+    <div class="card">
+      <div class="tag" style="color:var(--lime);">👑 RANKING</div>
+      <h3>Tu corona viaja contigo</h3>
+      <p>Puntos por canción, votos y batallas. Ranking por noche, por bar y por ciudad. Rey o reina de la semana en Santa Cruz.</p>
+    </div>
+  </div>
+</section>
+
+<section id="crew">
+  <div class="wrap">
+    <div class="crew-head">
+      <div>
+        <div class="kicker">LA CREW</div>
+        <h2 style="max-width:22ch;">Una crew boliviana que anima la noche</h2>
+      </div>
+      <p style="color:var(--ink-faint); font-size:0.9rem; max-width:40ch;">Diez personajes de Santa Cruz y de todo el país. Te anuncian en la pantalla, te reciben cuando te toca y celebran tu corona. Elige el tuyo al crear tu cuenta.</p>
+    </div>
+    <img class="crew-lineup" src="/assets/crew-lineup.webp" alt="La crew completa de KARABOL" loading="lazy" />
+    <div class="crew-grid">
+      <div class="crew-card" style="--accent:var(--lime);"><div class="ph"><img src="/assets/karaboy-hero.webp" alt="Karaboy" loading="lazy" /></div><div class="meta"><div class="name">KARABOY</div><div class="role">El anfitrión</div></div></div>
+      <div class="crew-card" style="--accent:var(--magenta);"><div class="ph"><img src="/assets/elsombrero-hero.webp" alt="El Sombrero" loading="lazy" /></div><div class="meta"><div class="name">EL SOMBRERO</div><div class="role">El host</div></div></div>
+      <div class="crew-card" style="--accent:var(--magenta);"><div class="ph"><img src="/assets/cambita-hero.webp" alt="Cambita" loading="lazy" /></div><div class="meta"><div class="name">CAMBITA</div><div class="role">La diva</div></div></div>
+      <div class="crew-card" style="--accent:var(--lime);"><div class="ph"><img src="/assets/alpacho-hero.webp" alt="Alpacho" loading="lazy" /></div><div class="meta"><div class="name">ALPACHO</div><div class="role">El campeón</div></div></div>
+      <div class="crew-card" style="--accent:var(--magenta);"><div class="ph"><img src="/assets/diablada-hero.webp" alt="Supay" loading="lazy" /></div><div class="meta"><div class="name">SUPAY</div><div class="role">El hype</div></div></div>
+      <div class="crew-card" style="--accent:var(--cyan);"><div class="ph"><img src="/assets/jucumari-hero.webp" alt="Jucumari" loading="lazy" /></div><div class="meta"><div class="name">JUCUMARI</div><div class="role">El vibe</div></div></div>
+      <div class="crew-card" style="--accent:var(--cyan);"><div class="ph"><img src="/assets/paraba-hero.webp" alt="La Paraba" loading="lazy" /></div><div class="meta"><div class="name">LA PARABA</div><div class="role">La bocona</div></div></div>
+      <div class="crew-card" style="--accent:var(--cyan);"><div class="ph"><img src="/assets/taitetu-hero.webp" alt="Taitetú" loading="lazy" /></div><div class="meta"><div class="name">TAITETÚ</div><div class="role">El beat</div></div></div>
+      <div class="crew-card" style="--accent:var(--lime);"><div class="ph"><img src="/assets/laperechola-hero.webp" alt="La Perechola" loading="lazy" /></div><div class="meta"><div class="name">LA PERECHOLA</div><div class="role">La reina</div></div></div>
+      <div class="crew-card" style="--accent:var(--purple);"><div class="ph"><img src="/assets/capi-hero.webp" alt="Capi" loading="lazy" /></div><div class="meta"><div class="name">CAPI</div><div class="role">El tranqui</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="descargar" class="download">
+  <div class="download-glow"></div>
+  <h2>¿Te toca?</h2>
+  <p>Descarga KARABOL, escanea tu mesa o arma tu House Party. Gratis para cantantes.</p>
+  <div class="ctas">
+    <a class="btn" style="background:var(--ink); color:var(--bg);" href="#"> App Store</a>
+    <a class="btn" style="background:var(--ink); color:var(--bg);" href="#">▶ Google Play</a>
+    <a class="btn btn-outline" href="#bares">Soy un bar</a>
+  </div>
+</section>
 
 <footer>
-  <div class="aguayo"></div>
-  <div class="wrap">
-    <div class="foot-top">
-      <div>
-        <div class="brand">
-          <span class="burst"><span class="core"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3M9 21h6"/></svg></span></span>
-          <div class="logo"><span class="kara">KARA</span><span class="bol">BOL</span></div>
-        </div>
-        <div class="foot-cities">
-          <span>La Paz · 3.640 m</span>
-          <span>Santa Cruz · 416 m</span>
-          <span>Cochabamba · 2.558 m</span>
-        </div>
-      </div>
-      <a class="btn btn-solid" href="mailto:hudsonargollo@gmail.com?subject=Demo%20Karabol"><span class="seg">Hablemos de tu local</span></a>
+  <div class="wrap foot-top">
+    <img class="wordmark" src="/assets/logo.webp" alt="KARABOL" />
+    <div class="foot-links">
+      <a href="#">Términos</a><a href="#">Privacidad</a><a href="mailto:hudsonargollo@gmail.com">Contacto</a><a href="#">Instagram</a>
     </div>
   </div>
-  <div class="foot-bottom">
-    <span>© 2026 Karabol. Hecho en Bolivia.</span>
-    <span>hudsonargollo@gmail.com</span>
-  </div>
+  <div class="wrap foot-bottom">© 2026 KARABOL · Santa Cruz de la Sierra, Bolivia</div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script>
-(function () {
-  var canvas = document.getElementById('hero-gl');
-  if (!canvas || !window.THREE || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  var THREE = window.THREE;
-  var renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
-  } catch (e) { return; }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-  camera.position.set(0, 0, 9);
-
-  // Soft round sparkle sprite (points render as hard squares otherwise).
-  var spriteCanvas = document.createElement('canvas');
-  spriteCanvas.width = spriteCanvas.height = 64;
-  var sctx = spriteCanvas.getContext('2d');
-  var grad = sctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-  grad.addColorStop(0, 'rgba(255,255,255,1)');
-  grad.addColorStop(0.4, 'rgba(255,255,255,0.6)');
-  grad.addColorStop(1, 'rgba(255,255,255,0)');
-  sctx.fillStyle = grad;
-  sctx.fillRect(0, 0, 64, 64);
-  var sprite = new THREE.CanvasTexture(spriteCanvas);
-
-  // Sparkle field in the brand palette — gold, fuchsia, turquoise — biased to
-  // the right side of the hero, behind the scoreboard card, clear of the copy.
-  var palette = ['#f4b93c', '#ef2f7b', '#23c9c0'].map(function (hex) { return new THREE.Color(hex); });
-  var count = 160;
-  var positions = new Float32Array(count * 3);
-  var colors = new Float32Array(count * 3);
-  for (var i = 0; i < count; i++) {
-    var r = 2 + Math.random() * 4.5;
-    var theta = Math.random() * Math.PI * 2;
-    var phi = Math.acos(Math.random() * 2 - 1);
-    positions[i * 3] = r * Math.sin(phi) * Math.cos(theta) + 5.6;
-    positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.55;
-    positions[i * 3 + 2] = r * Math.cos(phi) - 2;
-    var c = palette[i % palette.length];
-    colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
-  }
-  var particleGeo = new THREE.BufferGeometry();
-  particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  var particles = new THREE.Points(particleGeo, new THREE.PointsMaterial({
-    size: 0.22, map: sprite, vertexColors: true, transparent: true, opacity: 0.9,
-    depthWrite: false, blending: THREE.AdditiveBlending,
-  }));
-  scene.add(particles);
-
-  // A torus knot — the classic Three.js reference shape — standing in for the
-  // starburst/spotlight logomark rendered in 3D, tucked behind the scoreboard.
-  var knot = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(1.3, 0.1, 140, 14, 2, 3),
-    new THREE.MeshBasicMaterial({ color: 0xf4b93c, wireframe: true, transparent: true, opacity: 0.22 })
-  );
-  knot.position.set(6, 0.2, -2.5);
-  scene.add(knot);
-
-  function resize() {
-    var el = canvas.parentElement;
-    var w = el.clientWidth, h = el.clientHeight;
-    if (!w || !h) return;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  var mouseX = 0, mouseY = 0;
-  window.addEventListener('pointermove', function (e) {
-    mouseX = e.clientX / window.innerWidth - 0.5;
-    mouseY = e.clientY / window.innerHeight - 0.5;
-  });
-
-  var running = true;
-  document.addEventListener('visibilitychange', function () {
-    running = document.visibilityState === 'visible';
-  });
-
-  var clock = new THREE.Clock();
-  function animate() {
-    requestAnimationFrame(animate);
-    if (!running) return;
-    var t = clock.getElapsedTime();
-    particles.rotation.y = t * 0.035;
-    particles.rotation.x = t * 0.012;
-    knot.rotation.x = t * 0.14;
-    knot.rotation.y = t * 0.09;
-    camera.position.x += (mouseX * 1.1 - camera.position.x) * 0.03;
-    camera.position.y += (-mouseY * 0.7 - camera.position.y) * 0.03;
-    camera.lookAt(0, 0, 0);
-    renderer.render(scene, camera);
-  }
-  animate();
-  canvas.classList.add('is-ready');
-})();
-</script>
 </body>
 </html>
