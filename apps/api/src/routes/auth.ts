@@ -1,10 +1,13 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
+import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
+import { env } from '../config/env.js';
 import { prisma } from '../config/db.js';
 import { requireAuth, signToken } from '../middleware/auth.js';
 
 export const authRouter = Router();
+const googleClient = new OAuth2Client(env.googleClientId);
 
 const registerSchema = z.object({
   email: z.string().email().optional(),
@@ -13,7 +16,7 @@ const registerSchema = z.object({
   displayName: z.string().min(1),
 });
 
-// Patron self-registration (OAuth providers plug in here later as separate strategies).
+// Patron self-registration. See /auth/google below for the OAuth strategy.
 authRouter.post('/register', async (req, res) => {
   const parsed = registerSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
@@ -27,6 +30,41 @@ authRouter.post('/register', async (req, res) => {
 
   const token = signToken({ userId: user.id, role: user.role, venueId: user.venueId });
   return res.status(201).json({ token, user: { id: user.id, role: user.role, displayName: user.displayName } });
+});
+
+const googleSchema = z.object({ idToken: z.string() });
+
+// Patron sign-in via Google — the mobile app's only auth method (no
+// phone/password form). Finds an existing patron by the verified email, or
+// creates one on first sign-in; either way the client gets `isNewUser` back
+// so it knows whether to route into CrewPick or straight past it.
+authRouter.post('/google', async (req, res) => {
+  const parsed = googleSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+  if (!env.googleClientId) return res.status(500).json({ error: 'Google sign-in is not configured' });
+
+  let email: string | undefined;
+  let name: string | undefined;
+  try {
+    const ticket = await googleClient.verifyIdToken({ idToken: parsed.data.idToken, audience: env.googleClientId });
+    const payload = ticket.getPayload();
+    email = payload?.email;
+    name = payload?.name;
+  } catch {
+    return res.status(401).json({ error: 'Invalid Google token' });
+  }
+  if (!email) return res.status(400).json({ error: 'Google account has no email' });
+
+  let user = await prisma.user.findUnique({ where: { email } });
+  const isNewUser = !user;
+  if (!user) {
+    user = await prisma.user.create({
+      data: { email, displayName: name ?? email.split('@')[0], role: 'PATRON' },
+    });
+  }
+
+  const token = signToken({ userId: user.id, role: user.role, venueId: user.venueId });
+  return res.json({ token, user: { id: user.id, role: user.role, displayName: user.displayName }, isNewUser });
 });
 
 const loginSchema = z.object({

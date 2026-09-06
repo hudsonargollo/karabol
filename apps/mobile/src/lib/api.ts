@@ -51,10 +51,11 @@ export interface QueueEntry {
 }
 
 export const api = {
-  register: (payload: { email?: string; phone?: string; password: string; displayName: string }) =>
-    request<{ token: string; user: AuthUser }>('/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
-  login: (identifier: string, password: string) =>
-    request<{ token: string; user: AuthUser }>('/auth/login', { method: 'POST', body: JSON.stringify({ identifier, password }) }),
+  google: (idToken: string) =>
+    request<{ token: string; user: AuthUser; isNewUser: boolean }>('/auth/google', {
+      method: 'POST',
+      body: JSON.stringify({ idToken }),
+    }),
 
   joinTable: (venueSlug: string, pin: string) =>
     request<{ tableId: string; venueId: string; label: string }>('/tables/join', {

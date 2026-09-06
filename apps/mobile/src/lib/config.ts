@@ -2,3 +2,9 @@
 // per-environment (dev/staging/prod) API hosts to switch between.
 export const API_URL = 'https://karaoke.clubemkt.digital';
 export const DSP_WS_URL = 'wss://karaoke.clubemkt.digital/dsp';
+
+// "Web application" OAuth client from https://console.cloud.google.com/apis/credentials,
+// matching apps/api's GOOGLE_CLIENT_ID (same client, both sides check the same audience).
+// AuthScreen logs the redirect URI to add to that client's Authorized redirect URIs
+// on first run — Google rejects the sign-in request until it's whitelisted there.
+export const GOOGLE_CLIENT_ID = '';
