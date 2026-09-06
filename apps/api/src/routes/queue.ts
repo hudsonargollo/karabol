@@ -63,6 +63,21 @@ queueRouter.get('/:venueId', requireAuth, async (req, res) => {
   return res.json(entries);
 });
 
+// Unauthenticated on purpose — meant for a bar's own TV/tablet display, which
+// has no login session. Only exposes what a QR code on the table already
+// reveals to any patron in the venue (song titles + table labels, no PII),
+// same as the /:venueId route above already does for any logged-in patron.
+queueRouter.get('/:venueId/board', async (req, res) => {
+  const venue = await prisma.venue.findUnique({ where: { id: req.params.venueId }, select: { name: true } });
+  if (!venue) return res.status(404).json({ error: 'Venue not found' });
+
+  const entries = await prisma.queueEntry.findMany({
+    where: { venueId: req.params.venueId, status: { in: ['PENDING', 'PLAYING'] } },
+    orderBy: { position: 'asc' },
+  });
+  return res.json({ venueName: venue.name, entries });
+});
+
 // 3.2 Live Queue Dashboard — venue staff advance to the next song per the
 // density algorithm (3.3) and broadcast now-playing to every connected device.
 queueRouter.post(

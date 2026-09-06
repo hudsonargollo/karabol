@@ -83,7 +83,7 @@ export function AuthScreen({ navigation }: Props) {
       />
 
       <View style={styles.mcRow}>
-        <MascotBlock label="CAPI" accent={colors.purple} size={54} source={karabol.capybaraHero} />
+        <MascotBlock label="CAPI" accent={colors.purple} size={54} source={karabol.capiHead} />
         <Text style={styles.mcText}>
           <Text style={styles.mcName}>CAPI: </Text>
           Tranqui, bro. Solo pedimos tu email para avisarte cuando te toque.{' '}

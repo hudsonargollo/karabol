@@ -57,7 +57,7 @@ export function CrewPickScreen({ navigation }: Props) {
               onPress={() => setPicked(c.id)}
               style={[styles.cell, { borderColor: isActive ? c.accent : colors.line }]}
             >
-              <Image source={c.img} style={styles.cellImg} resizeMode="cover" />
+              <Image source={c.head ?? c.img} style={styles.cellImg} resizeMode="cover" />
               <Text
                 style={[
                   styles.cellLabel,
@@ -82,7 +82,7 @@ export function CrewPickScreen({ navigation }: Props) {
   );
 }
 
-const CELL_SIZE = 92;
+const CELL_SIZE = 64;
 
 const styles = StyleSheet.create({
   title: { color: colors.ink, fontSize: 24, lineHeight: 28, ...type.heading },
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     maxWidth: 140,
   },
   previewLineText: { color: colors.ink, fontSize: 12 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, justifyContent: 'center' },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, justifyContent: 'center' },
   cell: { width: CELL_SIZE, borderWidth: 2, backgroundColor: colors.surface2 },
   cellImg: { width: '100%', height: CELL_SIZE, backgroundColor: colors.surface3 },
   cellLabel: { fontSize: 9, letterSpacing: 0.5, fontWeight: '700', textAlign: 'center', paddingVertical: 5 },

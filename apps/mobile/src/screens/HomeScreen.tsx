@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { api, type QueueEntry, type YoutubeResult } from '../lib/api';
 import { authStore } from '../lib/authStore';
-import { crewById } from '../lib/crew';
+import { crewAvatar } from '../lib/crew';
 import { BottomNav } from '../components/BottomNav';
 import { MascotBlock } from '../components/MascotBlock';
 import { karabol } from '../assets/karabol';
@@ -45,7 +45,7 @@ export function HomeScreen({ route, navigation }: Props) {
 
   useEffect(() => {
     authStore.getUser().then((u) => setName(u?.displayName ?? 'Cantante'));
-    authStore.getCrew().then((id) => setCrewImg(crewById(id).img));
+    authStore.getCrew().then((id) => setCrewImg(crewAvatar(id)));
   }, []);
 
   useEffect(() => {
