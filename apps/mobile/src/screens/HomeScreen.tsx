@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
-import { api, type QueueEntry, type YoutubeResult } from '../lib/api';
+import { api, type PerformanceMode, type QueueEntry, type YoutubeResult } from '../lib/api';
 import { authStore } from '../lib/authStore';
 import { crewAvatar } from '../lib/crew';
 import { BottomNav } from '../components/BottomNav';
@@ -32,6 +32,7 @@ export function HomeScreen({ route, navigation }: Props) {
   const [name, setName] = useState('');
   const [crewImg, setCrewImg] = useState<number>(karabol.karaboyFace);
   const [myEntry, setMyEntry] = useState<{ position: number; entry: QueueEntry } | null>(null);
+  const [myRank, setMyRank] = useState<{ points: number; place: number } | null>(null);
 
   const [step, setStep] = useState<Step>(0);
   const [query, setQuery] = useState('');
@@ -58,6 +59,17 @@ export function HomeScreen({ route, navigation }: Props) {
         setMyEntry(idx >= 0 ? { position: idx + 1, entry: pending[idx] } : null);
       })
       .catch(() => setMyEntry(null));
+
+    // Real "tonight" points + rank — finds this user's own row in the venue
+    // leaderboard (see GET /venues/:id/leaderboard). No streak here: there's
+    // no consecutive-win tracking anywhere yet, so RACHA stays a dash below
+    // rather than a made-up number.
+    Promise.all([api.getLeaderboard(venueId), authStore.getUser()])
+      .then(([rows, user]) => {
+        const idx = user ? rows.findIndex((r) => r.userId === user.id) : -1;
+        setMyRank(idx >= 0 ? { points: rows[idx].points, place: idx + 1 } : null);
+      })
+      .catch(() => setMyRank(null));
   }, [step, venueId, tableId]);
 
   function goDash() {
@@ -92,7 +104,13 @@ export function HomeScreen({ route, navigation }: Props) {
     if (!pickedVideo) return;
     setAdding(true);
     try {
-      await api.queueSong({ venueId, tableId, youtubeVideoId: pickedVideo.youtubeVideoId, title: pickedVideo.title });
+      await api.queueSong({
+        venueId,
+        tableId,
+        youtubeVideoId: pickedVideo.youtubeVideoId,
+        title: pickedVideo.title,
+        mode: mode.toUpperCase() as PerformanceMode,
+      });
       navigation.replace('Queue', { venueId, tableId });
     } catch {
       setStatus('No se pudo añadir esa canción');
@@ -121,7 +139,7 @@ export function HomeScreen({ route, navigation }: Props) {
 
           <View style={styles.statsRow}>
             <View style={styles.statCell}>
-              <Text style={[styles.statNum, { color: colors.lime }]}>—</Text>
+              <Text style={[styles.statNum, { color: colors.lime }]}>{myRank ? myRank.points : '—'}</Text>
               <Text style={styles.statLabel}>PUNTOS</Text>
             </View>
             <View style={styles.statCell}>
@@ -129,7 +147,7 @@ export function HomeScreen({ route, navigation }: Props) {
               <Text style={styles.statLabel}>RACHA</Text>
             </View>
             <View style={styles.statCell}>
-              <Text style={[styles.statNum, { color: colors.cyan }]}>—</Text>
+              <Text style={[styles.statNum, { color: colors.cyan }]}>{myRank ? `#${myRank.place}` : '—'}</Text>
               <Text style={styles.statLabel}>RANKING</Text>
             </View>
           </View>

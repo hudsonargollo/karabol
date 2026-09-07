@@ -118,6 +118,11 @@ export function QueueScreen({ route, navigation }: Props) {
                 "{item.title}"
               </Text>
             </View>
+            {item.mode !== 'SOLO' && (
+              <Text style={[styles.modeTag, item.mode === 'BATTLE' ? styles.modeTagBattle : styles.modeTagDuo]}>
+                {item.mode === 'BATTLE' ? 'BATTLE' : 'DÚO'}
+              </Text>
+            )}
           </View>
         )}
       />
@@ -169,6 +174,9 @@ const styles = StyleSheet.create({
   pos: { color: colors.inkFaint, fontSize: 14, fontWeight: '700', width: 20 },
   rowTitle: { color: colors.ink, fontSize: 14, fontWeight: '600' },
   rowSong: { color: colors.inkFaint, fontSize: 12 },
+  modeTag: { fontSize: 10, fontWeight: '700', borderWidth: 1, paddingVertical: 3, paddingHorizontal: 7 },
+  modeTagDuo: { color: colors.purple, borderColor: colors.purple },
+  modeTagBattle: { color: colors.cyan, borderColor: colors.cyan },
   actions: { flexDirection: 'row', gap: spacing.sm, padding: spacing.xl, paddingTop: spacing.md },
   joinBtn: { flex: 1, backgroundColor: colors.lime, padding: spacing.md, alignItems: 'center' },
   joinBtnText: { color: colors.limeInk, fontWeight: '800', fontSize: 14 },

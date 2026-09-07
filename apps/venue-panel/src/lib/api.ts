@@ -55,7 +55,10 @@ export const api = {
     payload: { email?: string; phone?: string; password: string; displayName: string; role: 'VENUE_ADMIN' | 'VENUE_STAFF' },
   ) => request<VenueStaff>(`/venues/${venueId}/staff`, { method: 'POST', body: JSON.stringify(payload) }),
   createVenueTable: (venueId: string, label: string) =>
-    request(`/venues/${venueId}/tables`, { method: 'POST', body: JSON.stringify({ label }) }),
+    request<{ id: string; label: string; pin: string; qrToken: string; joinUrl: string; qrImageDataUrl: string }>(
+      `/venues/${venueId}/tables`,
+      { method: 'POST', body: JSON.stringify({ label }) },
+    ),
 
   getQueue: (venueId: string) => request<unknown[]>(`/queue/${venueId}`),
   advanceQueue: (venueId: string) => request(`/queue/${venueId}/advance`, { method: 'POST' }),

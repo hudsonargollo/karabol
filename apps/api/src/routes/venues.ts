@@ -6,6 +6,7 @@ import type { Request } from 'express';
 import { prisma } from '../config/db.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { encryptSecret } from '../utils/crypto.js';
+import { generateQrDataUrl } from '../utils/qrcode.js';
 import { LoyverseClient } from '../services/loyverseClient.js';
 
 export const venuesRouter = Router();
@@ -69,6 +70,31 @@ venuesRouter.get('/:id', requireAuth, async (req, res) => {
   return res.json({ ...safe, posConnected: Boolean(venue.posApiKeyEncrypted) });
 });
 
+// Ranking — real, aggregated from Score (points = sum of song scores,
+// "tonight" = since local midnight). No battle wins in here yet: there's no
+// Battle model, so wins/streaks the mockup shows stay off this endpoint
+// rather than being invented.
+venuesRouter.get('/:id/leaderboard', requireAuth, async (req, res) => {
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const scores = await prisma.score.findMany({
+    where: { createdAt: { gte: startOfToday }, queueEntry: { venueId: req.params.id } },
+    include: { user: { select: { id: true, displayName: true } } },
+  });
+
+  const byUser = new Map<string, { userId: string; displayName: string | null; points: number; songs: number }>();
+  for (const s of scores) {
+    const row = byUser.get(s.userId) ?? { userId: s.userId, displayName: s.user.displayName, points: 0, songs: 0 };
+    row.points += s.value;
+    row.songs += 1;
+    byUser.set(s.userId, row);
+  }
+
+  const ranking = [...byUser.values()].sort((a, b) => b.points - a.points).slice(0, 20);
+  return res.json(ranking);
+});
+
 const createStaffSchema = z.object({
   email: z.string().email().optional(),
   phone: z.string().min(6).optional(),
@@ -113,7 +139,12 @@ venuesRouter.post('/:id/tables', requireAuth, async (req, res) => {
   const table = await prisma.table.create({
     data: { venueId: venue.id, label: parsed.data.label, pin, qrToken },
   });
-  return res.status(201).json(table);
+
+  // Printable per-table QR — the mobile app's scanner parses this same
+  // slug+qr query-param shape (see TableJoinScreen).
+  const joinUrl = `https://karabol.app/join?slug=${encodeURIComponent(venue.slug)}&qr=${qrToken}`;
+  const qrImageDataUrl = await generateQrDataUrl(joinUrl);
+  return res.status(201).json({ ...table, joinUrl, qrImageDataUrl });
 });
 
 const rewardRulesSchema = z.object({

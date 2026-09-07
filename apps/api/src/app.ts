@@ -8,6 +8,7 @@ import { walletRouter } from './routes/wallet.js';
 import { scoresRouter } from './routes/scores.js';
 import { youtubeRouter } from './routes/youtube.js';
 import { venuesRouter } from './routes/venues.js';
+import { usersRouter } from './routes/users.js';
 
 export const app = express();
 
@@ -23,6 +24,7 @@ app.use('/wallet', walletRouter);
 app.use('/scores', scoresRouter);
 app.use('/youtube', youtubeRouter);
 app.use('/venues', venuesRouter);
+app.use('/users', usersRouter);
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);

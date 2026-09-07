@@ -10,6 +10,7 @@ interface BoardEntry {
   tableId: string;
   title: string;
   status: 'PENDING' | 'PLAYING' | 'COMPLETED' | 'SKIPPED';
+  mode: 'SOLO' | 'DUO' | 'BATTLE';
   position: number;
 }
 
@@ -103,7 +104,14 @@ export function BoardPage({ venueId }: { venueId: string }) {
               <div className="board-row" key={entry.id}>
                 <span className="board-row-pos">{i + 1}</span>
                 <div className="board-row-text">
-                  <div className="board-row-name">Mesa {entry.tableId}</div>
+                  <div className="board-row-name">
+                    Mesa {entry.tableId}
+                    {entry.mode !== 'SOLO' && (
+                      <span className={`board-row-mode ${entry.mode === 'BATTLE' ? 'battle' : 'duo'}`}>
+                        {entry.mode === 'BATTLE' ? 'BATTLE' : 'DÚO'}
+                      </span>
+                    )}
+                  </div>
                   <div className="board-row-song">{entry.title}</div>
                 </div>
                 <span className="board-row-eta">{i === 0 ? 'SIGUIENTE' : ''}</span>

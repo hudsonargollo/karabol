@@ -5,7 +5,11 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "ios": { "supportsTablet": true },
-    "android": {}
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": { "NSCameraUsageDescription": "Para escanear el QR de tu mesa." }
+    },
+    "android": {},
+    "plugins": [["expo-camera", { "cameraPermission": "Para escanear el QR de tu mesa." }]]
   }
 }

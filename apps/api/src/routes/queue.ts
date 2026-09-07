@@ -13,13 +13,17 @@ const requestSchema = z.object({
   tableId: z.string(),
   youtubeVideoId: z.string(),
   title: z.string(),
+  mode: z.enum(['SOLO', 'DUO', 'BATTLE']).default('SOLO'),
 });
 
-// 3.1 YouTube Integration — patron queues a track for their table.
+// 3.1 YouTube Integration — patron queues a track for their table. `mode` is
+// a label the patron picks (solo/duo/battle) — there's no duo-partner
+// matching or battle-round pairing behind it yet, it's stored and shown on
+// the queue/TV board so that feature can build on top of real data later.
 queueRouter.post('/', requireAuth, async (req, res) => {
   const parsed = requestSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
-  const { venueId, tableId, youtubeVideoId, title } = parsed.data;
+  const { venueId, tableId, youtubeVideoId, title, mode } = parsed.data;
 
   const position = await prisma.queueEntry.count({ where: { venueId, status: 'PENDING' } });
   const entry = await prisma.queueEntry.create({
@@ -29,6 +33,7 @@ queueRouter.post('/', requireAuth, async (req, res) => {
       requestedById: req.auth!.userId,
       youtubeVideoId,
       title,
+      mode,
       position,
     },
   });

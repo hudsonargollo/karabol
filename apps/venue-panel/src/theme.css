@@ -222,6 +222,9 @@ table.data-table tr:hover td { background: var(--surface-2); }
 
 .empty-state { color: var(--ink-faint); font-size: 0.9rem; padding: 8px 0; }
 
+.table-qr { margin-top: 16px; display: flex; gap: 20px; align-items: center; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.table-qr img { border-radius: var(--radius-sm); background: #fff; }
+
 /* ---- login screen ---- */
 .login-wrap {
   position: relative;
@@ -305,6 +308,9 @@ table.data-table tr:hover td { background: var(--surface-2); }
 .board-row:first-child .board-row-pos { color: var(--lime); }
 .board-row-text { flex: 1; min-width: 0; }
 .board-row-name { font-family: var(--font-display); font-size: clamp(0.95rem, 1.6vw, 1.1rem); font-weight: 600; }
+.board-row-mode { margin-left: 8px; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; border: 1px solid; padding: 1px 6px; vertical-align: middle; }
+.board-row-mode.duo { color: var(--purple); border-color: var(--purple); }
+.board-row-mode.battle { color: var(--cyan); border-color: var(--cyan); }
 .board-row-song { color: var(--ink-faint); font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .board-row-eta { font-size: 0.8rem; color: var(--lime); font-weight: 700; }
 .board-cta {

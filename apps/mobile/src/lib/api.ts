@@ -39,6 +39,8 @@ export interface AuthUser {
   displayName: string;
 }
 
+export type PerformanceMode = 'SOLO' | 'DUO' | 'BATTLE';
+
 export interface QueueEntry {
   id: string;
   venueId: string;
@@ -46,8 +48,21 @@ export interface QueueEntry {
   youtubeVideoId: string;
   title: string;
   status: 'PENDING' | 'PLAYING' | 'COMPLETED' | 'SKIPPED';
+  mode: PerformanceMode;
   position: number;
   createdAt: string;
+}
+
+export interface UserStats {
+  songsCompleted: number;
+  averageScore: number | null;
+}
+
+export interface LeaderboardRow {
+  userId: string;
+  displayName: string | null;
+  points: number;
+  songs: number;
 }
 
 export const api = {
@@ -57,15 +72,15 @@ export const api = {
       body: JSON.stringify({ code, redirectUri }),
     }),
 
-  joinTable: (venueSlug: string, pin: string) =>
+  joinTable: (venueSlug: string, credentials: { pin: string } | { qrToken: string }) =>
     request<{ tableId: string; venueId: string; label: string }>('/tables/join', {
       method: 'POST',
-      body: JSON.stringify({ venueSlug, pin }),
+      body: JSON.stringify({ venueSlug, ...credentials }),
     }),
 
   searchYoutube: (q: string) => request<YoutubeResult[]>(`/youtube/search?q=${encodeURIComponent(q)}`),
 
-  queueSong: (payload: { venueId: string; tableId: string; youtubeVideoId: string; title: string }) =>
+  queueSong: (payload: { venueId: string; tableId: string; youtubeVideoId: string; title: string; mode: PerformanceMode }) =>
     request('/queue', { method: 'POST', body: JSON.stringify(payload) }),
 
   getQueue: (venueId: string) => request<QueueEntry[]>(`/queue/${venueId}`),
@@ -79,4 +94,8 @@ export const api = {
     }),
 
   getWallet: () => request<WalletItem[]>('/wallet'),
+
+  getMyStats: () => request<UserStats>('/users/me/stats'),
+
+  getLeaderboard: (venueId: string) => request<LeaderboardRow[]>(`/venues/${venueId}/leaderboard`),
 };

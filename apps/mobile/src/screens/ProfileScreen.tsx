@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
+import { api, type UserStats } from '../lib/api';
 import { authStore } from '../lib/authStore';
 import { crewById } from '../lib/crew';
 import { BottomNav } from '../components/BottomNav';
@@ -19,9 +20,11 @@ const CREW = [
   { label: 'Paraba', accent: colors.purple, img: karabol.parabaHero },
 ];
 
-// 08 Perfil — real display name from auth; there's no stats/achievements
-// backend yet so those show as dashes rather than invented numbers. "Bio"
-// is local-only (no profile-update endpoint yet), but genuinely editable.
+// 08 Perfil — real display name from auth. CANCIONES/PROMEDIO come from
+// GET /users/me/stats (real Score/QueueEntry data); BATTLES stays a dash —
+// there's no Battle model yet (BattleScreen is still a fixed local demo),
+// so that stat would have to be invented. "Bio" is local-only (no
+// profile-update endpoint yet), but genuinely editable.
 export function ProfileScreen({ route, navigation }: Props) {
   const { venueId, tableId } = route.params;
   const [name, setName] = useState('');
@@ -29,10 +32,12 @@ export function ProfileScreen({ route, navigation }: Props) {
   const [bio, setBio] = useState('Karaoke es vida, bro…');
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(bio);
+  const [stats, setStats] = useState<UserStats | null>(null);
 
   useEffect(() => {
     authStore.getUser().then((u) => setName(u?.displayName ?? 'Cantante'));
     authStore.getCrew().then((id) => setCrewName(id ? crewById(id).name : null));
+    api.getMyStats().then(setStats).catch(() => setStats(null));
   }, []);
 
   async function logout() {
@@ -70,12 +75,18 @@ export function ProfileScreen({ route, navigation }: Props) {
       </View>
 
       <View style={styles.statsGrid}>
-        {['CANCIONES', 'BATTLES', 'PROMEDIO'].map((label) => (
-          <View key={label} style={styles.statCell}>
-            <Text style={styles.statNum}>—</Text>
-            <Text style={styles.statLabel}>{label}</Text>
-          </View>
-        ))}
+        <View style={styles.statCell}>
+          <Text style={styles.statNum}>{stats ? stats.songsCompleted : '—'}</Text>
+          <Text style={styles.statLabel}>CANCIONES</Text>
+        </View>
+        <View style={styles.statCell}>
+          <Text style={styles.statNum}>—</Text>
+          <Text style={styles.statLabel}>BATTLES</Text>
+        </View>
+        <View style={styles.statCell}>
+          <Text style={styles.statNum}>{stats?.averageScore ?? '—'}</Text>
+          <Text style={styles.statLabel}>PROMEDIO</Text>
+        </View>
       </View>
 
       <Text style={styles.sectionLabel}>CREW</Text>

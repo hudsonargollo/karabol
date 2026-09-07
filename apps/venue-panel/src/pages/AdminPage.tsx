@@ -18,6 +18,7 @@ export function AdminPage() {
 
   const [tableVenueId, setTableVenueId] = useState('');
   const [tableLabel, setTableLabel] = useState('');
+  const [newTableQr, setNewTableQr] = useState<{ label: string; pin: string; qrImageDataUrl: string } | null>(null);
 
   async function refresh() {
     try {
@@ -67,9 +68,9 @@ export function AdminPage() {
     setError(null);
     setNotice(null);
     try {
-      await api.createVenueTable(tableVenueId, tableLabel.trim());
+      const table = await api.createVenueTable(tableVenueId, tableLabel.trim());
       setTableLabel('');
-      setNotice('Table created.');
+      setNewTableQr({ label: table.label, pin: table.pin, qrImageDataUrl: table.qrImageDataUrl });
       await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not create the table');
@@ -173,6 +174,17 @@ export function AdminPage() {
             Create
           </button>
         </div>
+
+        {newTableQr && (
+          <div className="table-qr">
+            <img src={newTableQr.qrImageDataUrl} alt={`QR for ${newTableQr.label}`} width={200} height={200} />
+            <div>
+              <p style={{ fontWeight: 700 }}>{newTableQr.label}</p>
+              <p className="empty-state">PIN fallback: {newTableQr.pin}</p>
+              <p className="empty-state">Print this QR for the table — it won't be shown again here.</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

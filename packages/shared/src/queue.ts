@@ -1,4 +1,5 @@
 export type QueueEntryStatus = 'PENDING' | 'PLAYING' | 'COMPLETED' | 'SKIPPED';
+export type PerformanceMode = 'SOLO' | 'DUO' | 'BATTLE';
 
 export interface QueueEntry {
   id: string;
@@ -9,6 +10,7 @@ export interface QueueEntry {
   title: string;
   requestedBy: string;
   status: QueueEntryStatus;
+  mode: PerformanceMode;
   position: number;
   createdAt: string;
 }
