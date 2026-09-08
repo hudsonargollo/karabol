@@ -65,7 +65,7 @@ export function SplashScreen({ navigation }: Props) {
           </Animated.View>
         </Pressable>
         <Pressable style={styles.secondaryBtn} onPress={() => navigation.replace('Auth')}>
-          <Text style={styles.secondaryBtnText}>Solo mirar la cola</Text>
+          <Text style={styles.secondaryBtnText}>Solo mirar la lista</Text>
         </Pressable>
       </View>
     </View>

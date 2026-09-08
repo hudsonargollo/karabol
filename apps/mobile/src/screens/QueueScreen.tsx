@@ -40,7 +40,7 @@ export function QueueScreen({ route, navigation }: Props) {
       api
         .getQueue(venueId)
         .then((data) => !cancelled && setEntries(data))
-        .catch(() => !cancelled && setError('No se pudo cargar la cola'));
+        .catch(() => !cancelled && setError('No se pudo cargar la lista'));
     }
     refresh();
 
@@ -106,7 +106,7 @@ export function QueueScreen({ route, navigation }: Props) {
         data={upcoming}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={<Text style={styles.empty}>Nadie en la cola todavía.</Text>}
+        ListEmptyComponent={<Text style={styles.empty}>Nadie en la lista todavía.</Text>}
         renderItem={({ item, index }) => (
           <View style={styles.row}>
             <Text style={[styles.pos, index === 0 && { color: colors.lime }]}>{index + 1}</Text>
