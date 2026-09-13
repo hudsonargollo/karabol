@@ -121,6 +121,7 @@
   .phone-queue .now img{ width:40px; height:40px; object-fit:cover; }
   .phone-queue .now .label{ font-size:8px; letter-spacing:0.1em; color:var(--cyan); }
   .phone-queue .now .name{ font-size:11px; font-weight:700; }
+  .phone-queue .vote-chip{ font-family:'Sora',sans-serif; font-weight:800; font-size:9px; color:var(--lime-ink); background:var(--lime); padding:5px 8px; white-space:nowrap; }
   .phone-queue .rows{ padding:8px 14px; display:flex; flex-direction:column; font-size:10px; }
   .phone-queue .rows .r{ display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--line); }
   .phone-queue .rows .r:last-child{ border-bottom:none; }
@@ -148,6 +149,9 @@
   .tv-eq span{ width:4px; height:100%; background:var(--lime); animation:eqBar 0.75s infinite; transform-origin:bottom; }
   .tv-eq span:nth-child(2){ background:var(--magenta); animation-duration:0.85s; }
   .tv-eq span:nth-child(3){ background:var(--cyan); animation-duration:0.6s; }
+  .tv-votes{ display:flex; align-items:baseline; gap:8px; margin-top:6px; }
+  .tv-votes .avg{ font-family:'Sora',sans-serif; font-weight:800; font-size:clamp(12px,1.5vw,24px); color:var(--lime); }
+  .tv-votes .cnt{ font-size:clamp(7px,0.7vw,11px); color:var(--ink-faint); }
   .tv-list{ flex:1; border-left:1px solid var(--line-strong); padding:4%; display:flex; flex-direction:column; gap:6%; font-size:clamp(7px,0.75vw,12px); }
   .tv-list .title{ font-weight:700; font-size:clamp(9px,1vw,15px); font-family:'Sora',sans-serif; }
   .tv-list .r{ display:flex; justify-content:space-between; padding:4% 0; border-bottom:1px solid var(--line); }
@@ -243,7 +247,7 @@
   </div>
   <div class="hero-pills">
     <div class="hero-pill"><span class="dot" style="background:var(--lime); box-shadow:0 0 10px var(--lime);"></span><b>Lista en vivo</b>&nbsp;· sin papelitos</div>
-    <div class="hero-pill"><span class="dot" style="background:var(--magenta); box-shadow:0 0 10px var(--magenta);"></span><b>Battles</b>&nbsp;· el público vota</div>
+    <div class="hero-pill"><span class="dot" style="background:var(--magenta); box-shadow:0 0 10px var(--magenta);"></span><b>El público vota</b>&nbsp;· cada canción, en vivo</div>
     <div class="hero-pill"><span class="dot" style="background:var(--cyan); box-shadow:0 0 10px var(--cyan);"></span><b>House Party</b>&nbsp;· tu sala es el bar</div>
   </div>
 </section>
@@ -261,12 +265,12 @@
       <div class="step">
         <span class="idx" style="color:var(--magenta);">02</span>
         <h3>Elige la versión perfecta</h3>
-        <p>Buscas la canción y KARABOL te muestra las pistas karaoke de YouTube ordenadas por la AI: tono original o bajo, dúo, versión party. Eliges y entras a la lista.</p>
+        <p>Buscas la canción y KARABOL te muestra solo pistas karaoke de YouTube que sí se reproducen en la TV del bar. Eliges y entras a la lista.</p>
       </div>
       <div class="step">
         <span class="idx" style="color:var(--cyan);">03</span>
         <h3>Te toca. Canta. Reina.</h3>
-        <p>Aviso dos turnos antes. La pantalla del bar te anuncia, cantas, el público puntúa. Sumas al ranking del bar y de la ciudad.</p>
+        <p>La pantalla del bar te anuncia, cantas, y todo el bar te puntúa de 1 a 5 desde su celular. Tu estrella sube al ranking del bar y de la ciudad — y si la clavas, ganas un descuento en la cuenta.</p>
       </div>
     </div>
   </div>
@@ -280,7 +284,7 @@
       <div class="featlist">
         <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">La lista en tu bolsillo</div><div class="d">Tu posición en vivo, tiempo estimado y aviso 2 turnos antes. Reordena o pasa tu turno sin hablar con nadie.</div></div></div>
         <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">Tu canción, tu versión</div><div class="d">Elige la pista de YouTube que te queda: tono original, más bajo, dúo con dos voces, remix party. La AI te recomienda la mejor.</div></div></div>
-        <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">Reta y que el bar decida</div><div class="d">Battle 1 vs 1 con la misma canción o distinta. Todo el bar vota desde su celular mientras cantan.</div></div></div>
+        <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">El bar es tu jurado</div><div class="d">Mientras cantas, la gente vota 1–5 desde su mesa. El promedio sale en vivo en la TV. Bronce, plata u oro = descuento real en tu cuenta.</div></div></div>
         <div class="row"><span class="arrow" style="color:var(--lime);">→</span><div><div class="t">Tu perfil de cantante</div><div class="d">Puntos, rachas, victorias y canciones favoritas te siguen de bar en bar. Sube en el ranking de la ciudad.</div></div></div>
       </div>
     </div>
@@ -290,7 +294,8 @@
         <div class="title">La Lista <span style="color:var(--lime);">· 6</span></div>
         <div class="now">
           <img src="/assets/paraba-hero.webp" alt="" loading="lazy" />
-          <div><div class="label">AHORA CANTA</div><div class="name">Diego</div></div>
+          <div style="flex:1;"><div class="label">AHORA CANTA</div><div class="name">Diego</div></div>
+          <div class="vote-chip">★ VOTAR</div>
         </div>
         <div class="rows">
           <div class="r"><span><span class="pos" style="color:var(--lime);">2</span> Marisol</span><span class="eta">~4 min</span></div>
@@ -322,6 +327,7 @@
             <div class="label">AHORA EN EL ESCENARIO</div>
             <div class="name">Diego · "Bohemian Rhapsody"</div>
             <div class="tv-eq"><span></span><span></span><span></span></div>
+            <div class="tv-votes"><span class="avg">★ 4.7</span><span class="cnt">23 votos del público</span></div>
           </div>
         </div>
         <div class="tv-list">
@@ -343,9 +349,9 @@
         <div class="venue-card"><div class="t">Lista automática</div><div class="d">Orden justo, sin favoritos ni discusiones. Reglas configurables: máximo por mesa, tiempo por canción.</div></div>
         <div class="venue-card"><div class="t">Pantalla de bar</div><div class="d">TV con la lista en vivo, el que canta y la crew animando. Se conecta a cualquier TV o proyector.</div></div>
         <div class="venue-card"><div class="t">Battles y eventos</div><div class="d">Noches temáticas, torneos semanales, ranking del bar. La gente vuelve para defender su corona.</div></div>
-        <div class="venue-card"><div class="t">Datos de la noche</div><div class="d">Qué se canta, qué mesas participan, hora pico. Promos y consumo por mesa desde la app.</div></div>
+        <div class="venue-card"><div class="t">Recompensas que venden</div><div class="d">Un buen puntaje se convierte en un QR de descuento canjeable en tu caja (Loyverse). El cantante vuelve, la mesa consume más.</div></div>
       </div>
-      <a class="btn btn-outline" style="margin-top:8px;" href="mailto:hudsonargollo@gmail.com?subject=Registrar%20mi%20bar%20en%20Karabol">Registrar mi bar →</a>
+      <a class="btn btn-outline" style="margin-top:8px;" href="mailto:hola@karabol.app?subject=Registrar%20mi%20bar%20en%20Karabol">Registrar mi bar →</a>
     </div>
   </div>
 </section>
@@ -380,14 +386,14 @@
 <section class="section-tight" style="background:var(--surface);">
   <div class="wrap strip">
     <div class="card">
-      <div class="tag" style="color:var(--purple);">✦ KARABOL AI</div>
-      <h3>Aprende lo que canta tu ciudad</h3>
-      <p>Aprende de cada noche: qué canciones prenden, qué pistas de YouTube suenan bien, en qué tono canta la gente. Etiqueta cada tema (HOT, DÚO, FÁCIL, PARTY, CLASSIC) y te pone la mejor versión primero.</p>
+      <div class="tag" style="color:var(--purple);">🎁 RECOMPENSAS</div>
+      <h3>Cantar bien paga</h3>
+      <p>Bronce, plata u oro según lo que vote el bar. Cada nivel es un QR de descuento en tu billetera, canjeable en la caja esa misma noche. Sin puntos abstractos: plata de verdad.</p>
     </div>
     <div class="card">
       <div class="tag" style="color:var(--magenta);">⚔ BATTLE MODE</div>
       <h3>El público decide</h3>
-      <p>Dos voces, un trono. Todo el bar vota desde su celular mientras cantan. Rachas, badges y la corona de la noche para el ganador.</p>
+      <p>Dos voces, un trono. Todo el bar vota desde su celular mientras cantan. La corona de la noche para quien más estrellas junte.</p>
     </div>
     <div class="card">
       <div class="tag" style="color:var(--lime);">👑 RANKING</div>
@@ -437,7 +443,7 @@
   <div class="wrap foot-top">
     <img class="wordmark" src="/assets/logo.webp" alt="KARABOL" />
     <div class="foot-links">
-      <a href="#">Términos</a><a href="#">Privacidad</a><a href="mailto:hudsonargollo@gmail.com">Contacto</a><a href="#">Instagram</a>
+      <a href="#">Términos</a><a href="#">Privacidad</a><a href="mailto:hola@karabol.app">Contacto</a><a href="#">Instagram</a>
     </div>
   </div>
   <div class="wrap foot-bottom">© 2026 KARABOL · Santa Cruz de la Sierra, Bolivia</div>
