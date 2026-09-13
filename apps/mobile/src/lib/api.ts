@@ -1,3 +1,4 @@
+import type { VoteTally } from '@karaokebo/shared';
 import { API_URL } from './config';
 import { authStore } from './authStore';
 
@@ -53,6 +54,13 @@ export interface QueueEntry {
   createdAt: string;
 }
 
+export interface OpenPerformance {
+  entry: QueueEntry | null;
+  tally: VoteTally | null;
+  myVote: number | null;
+  isMine?: boolean;
+}
+
 export interface UserStats {
   songsCompleted: number;
   averageScore: number | null;
@@ -92,6 +100,12 @@ export const api = {
     request<{ completed: QueueEntry; next: QueueEntry | null }>(`/queue/${venueId}/finish/${queueEntryId}`, {
       method: 'POST',
     }),
+
+  // 3.4 Peer voting
+  getOpenPerformance: (venueId: string) => request<OpenPerformance>(`/performances/venue/${venueId}/open`),
+  getTally: (queueEntryId: string) => request<VoteTally>(`/performances/${queueEntryId}/tally`),
+  castVote: (queueEntryId: string, value: number) =>
+    request<VoteTally>(`/performances/${queueEntryId}/vote`, { method: 'POST', body: JSON.stringify({ value }) }),
 
   getWallet: () => request<WalletItem[]>('/wallet'),
 

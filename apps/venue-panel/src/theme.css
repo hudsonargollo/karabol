@@ -339,3 +339,38 @@ table.data-table tr:hover td { background: var(--surface-2); }
 }
 .board-cta-brand { color: var(--lime); }
 .board-error { min-height: 100vh; display: flex; align-items: center; justify-content: center; color: var(--ink-faint); font-family: var(--font-mono); }
+
+/* 09 Bar TV — crowd vote meter (3.4) */
+.board-votes {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 12px;
+}
+.board-votes-avg {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--lime, #c6ff3d);
+}
+.board-votes-count {
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
+/* 09 Bar TV — video refused to play */
+.board-playback-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+}
+.board-playback-error strong {
+  font-size: 1.4rem;
+}

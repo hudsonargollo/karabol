@@ -34,19 +34,8 @@ services:
     ports:
       - '4000:4000'
 
-  dsp-service:
-    build:
-      context: ../apps/dsp-service
-    restart: unless-stopped
-    env_file: ../.env
-    environment:
-      REDIS_URL: redis://redis:6379
-      API_BASE_URL: http://api:4000
-    depends_on:
-      - redis
-      - api
-    ports:
-      - '8000:8000'
+  # dsp-service is parked: scoring moved to peer voting inside `api`
+  # (see apps/dsp-service/README.md). Re-add here if it ever comes back.
 
   nginx:
     image: nginx:1.27-alpine

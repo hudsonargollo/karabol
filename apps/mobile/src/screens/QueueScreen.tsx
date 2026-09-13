@@ -24,8 +24,8 @@ const PARABA_LINES = [
   'Prepárate, que tu turno se acerca.',
 ];
 
-// 03 La Cola — 3.2/3.3 live queue view. Auto-advances to the scoring screen
-// when this table's entry starts playing.
+// 03 La Cola — 3.2/3.3 live queue view. Auto-advances to the performance
+// screen when this table's entry starts playing; offers the ballot otherwise.
 export function QueueScreen({ route, navigation }: Props) {
   const { venueId, tableId } = route.params;
   const [entries, setEntries] = useState<QueueEntry[]>([]);
@@ -92,6 +92,11 @@ export function QueueScreen({ route, navigation }: Props) {
             <View style={{ marginTop: spacing.xs }}>
               <EqBars />
             </View>
+            {nowPlaying.tableId !== tableId && (
+              <Pressable style={styles.voteBtn} onPress={() => navigation.navigate('Vote', { venueId, tableId })}>
+                <Text style={styles.voteBtnText}>★ VOTAR</Text>
+              </Pressable>
+            )}
           </View>
           <TypedBubble
             accent={colors.cyan}
@@ -160,6 +165,8 @@ const styles = StyleSheet.create({
   },
   nowLabel: { color: colors.cyan, fontSize: 11, letterSpacing: 1 },
   nowTitle: { color: colors.ink, fontSize: 16, fontWeight: '700', marginTop: 2 },
+  voteBtn: { alignSelf: 'flex-start', marginTop: spacing.sm, borderWidth: 1, borderColor: colors.lime, paddingVertical: 4, paddingHorizontal: 10 },
+  voteBtnText: { color: colors.lime, fontWeight: '800', fontSize: 12 },
   sectionLabel: { color: colors.inkFaint, fontSize: 12, letterSpacing: 1.2, paddingHorizontal: spacing.xl, marginTop: spacing.lg },
   list: { paddingHorizontal: spacing.xl, paddingTop: spacing.sm },
   empty: { color: colors.inkFaint, fontSize: 14, paddingVertical: spacing.lg, textAlign: 'center' },

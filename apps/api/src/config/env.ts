@@ -16,9 +16,10 @@ export const env = {
   jwtSecret: required('JWT_SECRET', 'dev-secret-change-me'),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
   corsOrigin: process.env.CORS_ORIGIN ?? '*',
-  internalServiceSecret: required('INTERNAL_SERVICE_SECRET', 'dev-internal-secret-change-me'),
   appEncryptionKey: required('APP_ENCRYPTION_KEY', 'dev-encryption-key-change-me'),
   youtubeApiKey: process.env.YOUTUBE_API_KEY,
+  // ISO 3166-1 alpha-2; used for search regionCode and region-restriction checks.
+  youtubeRegionCode: process.env.YOUTUBE_REGION_CODE ?? 'BO',
   // Web-type OAuth client from Google Cloud Console — see /auth/google.
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,

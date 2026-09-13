@@ -52,6 +52,7 @@ model User {
   scores            Score[]
   rewardRedemptions RewardRedemption[]
   attendances       Attendance[]
+  votesCast         PerformanceVote[]
 
   @@index([venueId])
 }
@@ -109,8 +110,13 @@ model QueueEntry {
   createdAt      DateTime          @default(now())
   startedAt      DateTime?
   completedAt    DateTime?
+  // 3.4 Peer voting — set when the song ends; votes are accepted until then,
+  // after which the tally is frozen into a Score. Persisted (not Redis) so a
+  // restart can still close windows it missed.
+  votingClosesAt DateTime?
 
   score Score?
+  votes PerformanceVote[]
 
   @@index([venueId, status])
   @@index([tableId])
@@ -122,15 +128,34 @@ model Score {
   queueEntry    QueueEntry @relation(fields: [queueEntryId], references: [id])
   userId        String
   user          User       @relation(fields: [userId], references: [id])
-  value         Int // 0-100
-  pitchAccuracy Float?
-  streakBonus   Float?
+  value         Int // 0-100, derived from the vote average (see shared/voting.ts)
+  voteCount     Int         @default(0)
+  averageVote   Float? // raw 1-5 mean, for display
+  pitchAccuracy Float? // deprecated: DSP scoring is parked, never written
+  streakBonus   Float? // deprecated: DSP scoring is parked, never written
   tier          RewardTier?
   createdAt     DateTime   @default(now())
 
   rewardRedemption RewardRedemption?
 
   @@index([userId])
+}
+
+// 3.4 Peer voting — one ballot per patron per performance. The performer's
+// own vote is refused at the API; the unique index makes double-voting
+// impossible even under concurrent taps.
+model PerformanceVote {
+  id           String     @id @default(cuid())
+  queueEntryId String
+  queueEntry   QueueEntry @relation(fields: [queueEntryId], references: [id], onDelete: Cascade)
+  voterId      String
+  voter        User       @relation(fields: [voterId], references: [id])
+  value        Int // 1-5
+  createdAt    DateTime   @default(now())
+
+  @@unique([queueEntryId, voterId])
+  @@index([queueEntryId])
+  @@index([voterId])
 }
 
 model RewardRedemption {

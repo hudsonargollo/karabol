@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { SocketEvent, type QueueEntry } from '@karaokebo/shared';
+import { SocketEvent, type QueueEntry, type VoteTally } from '@karaokebo/shared';
 import { api } from '../lib/api';
 import { getSocket } from '../lib/socket';
 
-// 3.2 Live Queue Dashboard — master view with manual override controls.
+// 3.2 Live Queue Dashboard — master view with manual override controls and
+// the live crowd-vote tally (3.4) for whoever is on stage.
 export function QueueDashboard({ venueId, token }: { venueId: string; token: string }) {
   const [entries, setEntries] = useState<QueueEntry[]>([]);
   const [nowPlaying, setNowPlaying] = useState<QueueEntry | null>(null);
-  const [liveScore, setLiveScore] = useState<number | null>(null);
+  const [tally, setTally] = useState<VoteTally | null>(null);
 
   useEffect(() => {
     api.getQueue(venueId).then((data) => setEntries(data as QueueEntry[]));
@@ -20,15 +21,20 @@ export function QueueDashboard({ venueId, token }: { venueId: string; token: str
     });
     socket.on(SocketEvent.NOW_PLAYING, (entry: QueueEntry) => {
       setNowPlaying(entry);
-      setLiveScore(null);
+      setTally(null);
     });
-    socket.on(SocketEvent.SCORE_UPDATE, (payload: { value: number }) => setLiveScore(payload.value));
+    socket.on(SocketEvent.VOTE_UPDATE, (payload: { queueEntryId: string; tally: VoteTally }) => {
+      setNowPlaying((cur) => {
+        if (cur?.id === payload.queueEntryId) setTally(payload.tally);
+        return cur;
+      });
+    });
 
     return () => {
       socket.emit(SocketEvent.QUEUE_LEAVE, venueId);
       socket.off(SocketEvent.QUEUE_STATE);
       socket.off(SocketEvent.NOW_PLAYING);
-      socket.off(SocketEvent.SCORE_UPDATE);
+      socket.off(SocketEvent.VOTE_UPDATE);
     };
   }, [venueId, token]);
 
@@ -42,7 +48,10 @@ export function QueueDashboard({ venueId, token }: { venueId: string; token: str
           <div>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>
               <p style={{ fontSize: '1.1rem', fontWeight: 700 }}>{nowPlaying.title}</p>
-              <span className="score-num">{liveScore ?? '—'}</span>
+              <span className="score-num" title={tally ? `${tally.voteCount} votes` : 'no votes yet'}>
+                {tally?.averageVote != null ? `★ ${tally.averageVote.toFixed(1)}` : '★ —'}
+                {tally && tally.voteCount > 0 && <small style={{ marginLeft: 8, opacity: 0.6 }}>({tally.voteCount})</small>}
+              </span>
             </div>
             <div className="field-row">
               <button className="btn" onClick={() => api.completeSong(venueId, nowPlaying.id)}>

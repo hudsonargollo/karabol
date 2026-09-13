@@ -45,15 +45,3 @@ export function requireRole(...roles: Role[]) {
     return next();
   };
 }
-
-/**
- * Gate for service-to-service calls (the DSP microservice pushing scores).
- * Not a patron/venue identity — just proves the caller is a trusted internal service.
- */
-export function requireInternalService(req: Request, res: Response, next: NextFunction) {
-  const secret = req.headers['x-internal-secret'];
-  if (!secret || secret !== env.internalServiceSecret) {
-    return res.status(401).json({ error: 'Invalid internal service secret' });
-  }
-  return next();
-}

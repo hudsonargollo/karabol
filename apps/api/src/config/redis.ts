@@ -10,6 +10,7 @@ export const RedisKeys = {
   venueQueue: (venueId: string) => `venue:${venueId}:queue`, // sorted set, score = position
   venueActiveTable: (venueId: string) => `venue:${venueId}:active_table`,
   tableBlock: (venueId: string, tableId: string) => `venue:${venueId}:table:${tableId}:block`,
-  liveScore: (queueEntryId: string) => `score:${queueEntryId}:live`,
+  ytSearch: (normalizedQuery: string) => `yt:search:${normalizedQuery}`,
+  ytPlayable: (videoId: string) => `yt:playable:${videoId}`,
   leaderboardMonthly: (venueId: string) => `venue:${venueId}:leaderboard:monthly`,
 };

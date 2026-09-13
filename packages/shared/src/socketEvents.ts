@@ -13,9 +13,13 @@ export const SocketEvent = {
   QUEUE_PAUSE: 'queue:pause',
   QUEUE_REMOVE: 'queue:remove',
 
-  // DSP -> server -> patron/venue
-  SCORE_UPDATE: 'score:update',
-  SCORE_FINAL: 'score:final',
+  // 3.4 Peer voting -> server -> everyone in the venue room
+  /** A vote landed; payload carries the running tally for the live meter. */
+  VOTE_UPDATE: 'vote:update',
+  /** Voting closed for a performance; payload carries the final tally + reward. */
+  VOTE_FINAL: 'vote:final',
+  /** Voting just opened — clients should show the ballot for this entry. */
+  VOTE_OPEN: 'vote:open',
 
   // Rewards
   REWARD_ISSUED: 'reward:issued',

@@ -13,11 +13,12 @@ import { WinnerScreen } from './src/screens/WinnerScreen';
 import { LeaderboardScreen } from './src/screens/LeaderboardScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { PerformanceScreen } from './src/screens/PerformanceScreen';
+import { VoteScreen } from './src/screens/VoteScreen';
 import { WalletScreen } from './src/screens/WalletScreen';
 import { colors } from './src/theme';
 
 // 3.1 Patron Panel — splash -> auth -> table association -> the Home/Queue/
-// Battle/Profile tab set -> live DSP scoring when it's your turn.
+// Battle/Profile tab set -> crowd voting: perform when it's your turn, vote when it's not.
 export type RootStackParamList = {
   Splash: undefined;
   Auth: undefined;
@@ -29,6 +30,7 @@ export type RootStackParamList = {
   Battle: { venueId: string; tableId: string };
   Profile: { venueId: string; tableId: string };
   Performance: { queueEntryId: string; venueId: string; tableId: string };
+  Vote: { venueId: string; tableId: string };
   Winner: { venueId: string; tableId: string; winnerLabel: string; votePink: number; voteLime: number };
   Leaderboard: { venueId: string; tableId: string };
   Wallet: undefined;
@@ -73,6 +75,7 @@ export default function App() {
             <Stack.Screen name="Battle" component={BattleScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Performance" component={PerformanceScreen} options={{ title: 'Your turn!' }} />
+            <Stack.Screen name="Vote" component={VoteScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Winner" component={WinnerScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Leaderboard" component={LeaderboardScreen} options={{ title: 'Ranking' }} />
             <Stack.Screen name="Wallet" component={WalletScreen} options={{ title: 'My rewards' }} />

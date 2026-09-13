@@ -9,7 +9,7 @@ import type { AuthPayload } from '../middleware/auth.js';
 /**
  * Bi-directional WebSocket layer (PRD 4: Node.js + Socket.io) — patron
  * devices and the venue panel join a per-venue room and receive queue
- * state, now-playing, and live DSP score events pushed from Redis Pub/Sub.
+ * state, now-playing, and live peer-vote tallies.
  */
 export function initSockets(httpServer: HttpServer): Server {
   const io = new Server(httpServer, {

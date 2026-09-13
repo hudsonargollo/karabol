@@ -16,10 +16,28 @@ interface BoardEntry {
   position: number;
 }
 
+interface BoardVoting {
+  queueEntryId: string;
+  title: string;
+  tableId: string;
+  closesAt: string | null;
+  tally: { value: number; voteCount: number; averageVote: number | null; distribution: number[] };
+}
+
 interface BoardData {
   venueName: string;
   entries: BoardEntry[];
+  voting: BoardVoting | null;
 }
+
+// IFrame Player API error codes that mean "this video will not play here".
+const YT_FATAL_ERRORS: Record<number, string> = {
+  2: 'ID de video inválido',
+  5: 'El reproductor no pudo cargar el video',
+  100: 'El video ya no existe',
+  101: 'El dueño no permite reproducirlo fuera de YouTube',
+  150: 'El dueño no permite reproducirlo fuera de YouTube',
+};
 
 function ytCommand(win: Window | null | undefined, func: string, args: unknown[] = []) {
   win?.postMessage(JSON.stringify({ event: 'command', func, args }), YT_ORIGIN);
@@ -44,6 +62,7 @@ export function BoardPage({ venueId }: { venueId: string }) {
   const [data, setData] = useState<BoardData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [soundOn, setSoundOn] = useState(false);
+  const [playbackError, setPlaybackError] = useState<string | null>(null);
   const soundOnRef = useRef(soundOn);
   soundOnRef.current = soundOn;
   const playerRef = useRef<HTMLIFrameElement | null>(null);
@@ -73,6 +92,26 @@ export function BoardPage({ venueId }: { venueId: string }) {
     };
   }, [venueId]);
 
+  // The embed reports errors over postMessage once `listening` is sent (the
+  // onLoad handler below does that). Videos are verified playable at enqueue
+  // time, so this only fires for the rare one that changed status since —
+  // the board can't skip (it has no login), so it says so loudly and staff do.
+  useEffect(() => {
+    function onMessage(ev: MessageEvent) {
+      if (ev.origin !== YT_ORIGIN || typeof ev.data !== 'string') return;
+      try {
+        const msg = JSON.parse(ev.data) as { event?: string; info?: unknown };
+        if (msg.event === 'onError' && typeof msg.info === 'number') {
+          setPlaybackError(YT_FATAL_ERRORS[msg.info] ?? `Error ${msg.info} del reproductor`);
+        }
+      } catch {
+        /* not a player message */
+      }
+    }
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
+
   if (!venueId) {
     return (
       <div className="board-error">
@@ -92,11 +131,14 @@ export function BoardPage({ venueId }: { venueId: string }) {
   }
 
   function onPlayerLoad() {
+    setPlaybackError(null);
+    const win = playerRef.current?.contentWindow;
+    // Subscribe to player events (needed for onError above).
+    win?.postMessage(JSON.stringify({ event: 'listening', id: 'board' }), YT_ORIGIN);
     // A fresh iframe (new song) always starts muted (see the URL below) —
     // if the venue already granted sound once this session, re-apply it
     // without asking again.
     if (soundOnRef.current) {
-      const win = playerRef.current?.contentWindow;
       ytCommand(win, 'unMute');
       ytCommand(win, 'setVolume', [100]);
     }
@@ -120,10 +162,17 @@ export function BoardPage({ venueId }: { venueId: string }) {
           ) : (
             <img src={stageWide} alt="" className="board-stage-img" />
           )}
-          {nowPlaying && !soundOn && (
+          {nowPlaying && !soundOn && !playbackError && (
             <button className="board-sound-btn" onClick={enableSound}>
               🔊 Toca para activar el sonido
             </button>
+          )}
+          {nowPlaying && playbackError && (
+            <div className="board-playback-error">
+              <strong>Este video no se puede reproducir</strong>
+              <span>{playbackError}</span>
+              <span>Staff: salta esta canción desde el panel.</span>
+            </div>
           )}
         </div>
 
@@ -140,6 +189,18 @@ export function BoardPage({ venueId }: { venueId: string }) {
                   <span key={i} style={{ animationDelay: `${i * 90}ms` }} />
                 ))}
               </div>
+              {data?.voting && data.voting.queueEntryId === nowPlaying.id && (
+                <div className="board-votes">
+                  <span className="board-votes-avg">
+                    {data.voting.tally.averageVote != null ? `★ ${data.voting.tally.averageVote.toFixed(1)}` : '★ —'}
+                  </span>
+                  <span className="board-votes-count">
+                    {data.voting.tally.voteCount === 0
+                      ? '¡Vota desde tu celular!'
+                      : `${data.voting.tally.voteCount} ${data.voting.tally.voteCount === 1 ? 'voto' : 'votos'} del público`}
+                  </span>
+                </div>
+              )}
             </>
           ) : (
             <div className="board-now-title">El escenario está libre — ¡anímate!</div>

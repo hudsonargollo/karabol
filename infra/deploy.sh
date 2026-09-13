@@ -11,7 +11,6 @@ cd "$(dirname "$0")/.."
 # production deploy already). Rebuilding from scratch costs ~1 extra minute
 # but guarantees the image matches what's on disk.
 docker build --no-cache -t karaoke-api:latest -f apps/api/Dockerfile .
-docker build --no-cache -t karaoke-dsp:latest apps/dsp-service
 docker build --no-cache -t karaoke-landing:latest apps/landing
 docker build --no-cache -t karaoke-venue-panel:latest -f apps/venue-panel/Dockerfile .
 
